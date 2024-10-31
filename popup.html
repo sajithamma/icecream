@@ -2,11 +2,64 @@
 <html>
 
 <head>
-    <title>Screenshot Limiter</title>
+    <title>Screenshot Uploader</title>
+    <style>
+        /* Slide-in window styling */
+        /* Slide-in window styling */
+        .slide-window {
+            bottom: 20px;
+            /* Changed from -100px to 20px to make it visible */
+            right: 20px;
+            width: 100vw;
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            opacity: 1;
+            /* Set to 1 to ensure visibility */
+            font-family: Arial, sans-serif;
+            transition: none;
+            /* Removed transition for instant visibility */
+        }
+
+        /* Progress bar styling */
+        .progress-bar {
+            height: 6px;
+            background-color: #4CAF50;
+            width: 0;
+            border-radius: 3px;
+        }
+
+        /* Slide-in and visible effect */
+        .slide-window.show {
+            bottom: 20px;
+            opacity: 1;
+        }
+
+        /* ChatGPT theme inspired styles */
+        .slide-window p {
+            font-size: 20px;
+            line-height: 4;
+        }
+
+        #progressContainer {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 
 <body>
     <button id="screenshotBtn">Take Screenshot</button>
+
+    <!-- Slide-in window for progress and response -->
+    <div id="slideWindow" class="slide-window">
+        <div id="progressContainer">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <p id="messageContainer"></p>
+    </div>
+
     <script src="popup.js"></script>
 </body>
 
