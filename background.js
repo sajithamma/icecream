@@ -64,38 +64,35 @@ function displayNotification(tabId, message, showProgress = false) {
                 document.body.appendChild(notification);
             }
 
-            // Update notification styles
+            // Notification styling for a modern windowed look
             notification.style.position = "fixed";
             notification.style.bottom = "20px";
             notification.style.right = "20px";
-            notification.style.backgroundColor = "#333";
-            notification.style.color = "white";
-            notification.style.padding = "15px";
-            notification.style.borderRadius = "8px";
-            notification.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.3)";
-            notification.style.fontFamily = "Arial, sans-serif";
+            notification.style.width = "320px";
+            notification.style.backgroundColor = "#ffffff";
+            notification.style.color = "#000000";
+            notification.style.borderRadius = "10px";
+            notification.style.boxShadow = "0px 8px 16px rgba(0, 0, 0, 0.1)";
+            notification.style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
             notification.style.zIndex = "9999";
-            notification.style.maxWidth = "300px";
+            notification.style.lineHeight = "1.6";
+            notification.style.overflow = "hidden";
 
-            // Add the message and close button
+            // Add the window header with the "IceCream" title and close button
             notification.innerHTML = `
-          <p style="margin: 0; font-size: 0.9em; line-height: 1.4;">${message}</p>
-          <button id="close-notification" style="margin-top: 10px; padding: 5px 10px; background-color: #444; color: white; border: none; border-radius: 4px; cursor: pointer;">Close</button>
+          <div style="background-color: #1a73e8; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; font-weight: bold;">
+            <span>IceCream</span>
+            <button id="close-notification" style="background: none; border: none; color: white; font-weight: bold; cursor: pointer; font-size: 1.2em; line-height: 1;">&times;</button>
+          </div>
+          <div style="padding: 20px;">
+            <p style="margin: 0; font-size: 0.95em;">${message}</p>
+            ${showProgress ? '<div id="progress-bar" style="margin-top: 10px; height: 6px; background-color: #4CAF50; border-radius: 3px;"></div>' : ''}
+          </div>
         `;
 
-            // Add progress bar if needed
+            // Progress bar animation if needed
             if (showProgress) {
-                let progressBar = document.getElementById("progress-bar");
-                if (!progressBar) {
-                    progressBar = document.createElement("div");
-                    progressBar.id = "progress-bar";
-                    progressBar.style.height = "6px";
-                    progressBar.style.backgroundColor = "#4CAF50";
-                    progressBar.style.borderRadius = "3px";
-                    notification.insertBefore(progressBar, notification.firstChild);
-                }
-
-                // Animate progress bar width
+                let progressBar = notification.querySelector("#progress-bar");
                 let width = 0;
                 const interval = setInterval(() => {
                     width += 10;
@@ -105,9 +102,10 @@ function displayNotification(tabId, message, showProgress = false) {
             }
 
             // Close button functionality
-            document.getElementById("close-notification").onclick = () => notification.remove();
+            notification.querySelector("#close-notification").onclick = () => notification.remove();
         },
         args: [message, showProgress]
     });
 }
+
 
