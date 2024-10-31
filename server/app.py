@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 # Initialize Flask app and load environment variables
 app = Flask(__name__)
 load_dotenv()
-api_key = os.getenv("API_KEY")
+api_key = os.getenv("GEMINI_API_KEY")
 
 # Configure the Gemini API client
 genai.configure(api_key=api_key)
