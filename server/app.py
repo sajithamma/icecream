@@ -38,6 +38,8 @@ def upload_image():
     # Retrieve the question for the image or use a default question
     image_question = request.form.get("question", "Tell me about this image")
 
+    image_question += "Note: Read the full text, also images, diagrams, charts etc, and use it wise to answer the question.  Get the result in proper spacing and proper punctuations."
+
     try:
         # Process the image using the chosen handler
         response_text = handler.process_image(image_path, image_question)

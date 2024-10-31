@@ -111,7 +111,7 @@ function displayNotification(tabId, message, showProgress = false) {
                     <button id="close-notification" style="background: none; border: none; color: white; font-weight: bold; cursor: pointer; font-size: 1.2em; line-height: 1;">&times;</button>
                 </div>
                 <div style="padding: 20px;">
-                    <div style="font-size: 0.95em;">${renderedMessage}</div>
+                    <div style="font-size: 12px;">${renderedMessage}</div>
                     ${showProgress ? '<div id="progress-bar" style="margin-top: 10px; height: 6px; background-color: #4CAF50; border-radius: 3px; width: 0;"></div>' : ''}
                 </div>
             `;
