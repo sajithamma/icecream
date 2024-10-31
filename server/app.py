@@ -1,18 +1,20 @@
 from flask import Flask, request, jsonify
 import os
-from dotenv import load_dotenv
-from PIL import Image
-import google.generativeai as genai
 from werkzeug.utils import secure_filename
+from config import Config
+from handlers.openai_handler import OpenAIHandler
+from handlers.gemini_handler import GeminiHandler
 
-# Initialize Flask app and load environment variables
+# Initialize Flask app
 app = Flask(__name__)
-load_dotenv()
-api_key = os.getenv("GEMINI_API_KEY")
 
-# Configure the Gemini API client
-genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-1.5-flash')
+# Setup API handlers based on config
+if Config.DEFAULT_LLM == "OPENAI":
+    handler = OpenAIHandler(api_key=Config.OPENAI_API_KEY)
+elif Config.DEFAULT_LLM == "GEMINI":
+    handler = GeminiHandler(api_key=Config.GEMINI_API_KEY)
+else:
+    raise ValueError("Unsupported LLM configuration. Set DEFAULT_LLM to 'OPENAI' or 'GEMINI'.")
 
 # Ensure upload directory exists
 UPLOAD_FOLDER = 'uploaded_images'
@@ -36,18 +38,16 @@ def upload_image():
     # Retrieve the question for the image or use a default question
     image_question = request.form.get("question", "Tell me about this image")
 
-    # Upload the image to Gemini API
-    gemini_image_file = genai.upload_file(image_path)
-    print(f"Uploaded image file reference: {gemini_image_file}")
+    try:
+        # Process the image using the chosen handler
+        response_text = handler.process_image(image_path, image_question)
+    except Exception as e:
+        return jsonify({"status": "fail", "message": str(e)}), 500
+    finally:
+        # Remove the image after processing
+        os.remove(image_path)
 
-    # Generate content from Gemini API without streaming
-    result = model.generate_content([gemini_image_file, "\n\n", image_question])
-    response_text = result.text  # Extract the result text
-
-    # Remove the image after processing
-    os.remove(image_path)
-
-    return jsonify({"status": "success", "message": response_text.strip()}), 200
+    return jsonify({"status": "success", "message": response_text}), 200
 
 if __name__ == '__main__':
     app.run(debug=True, port=7001, host='0.0.0.0')
