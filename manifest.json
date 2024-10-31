@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "IceCreame",
     "version": "1.0",
-    "description": "IceCreame Sceenshot",
+    "description": "IceCreame Screenshot",
     "permissions": [
         "activeTab",
         "scripting",
@@ -13,7 +13,6 @@
         "service_worker": "background.js"
     },
     "action": {
-        "default_popup": "popup.html",
         "default_icon": {
             "16": "icon16.png",
             "48": "icon48.png",
