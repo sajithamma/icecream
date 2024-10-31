@@ -2,40 +2,46 @@
 chrome.action.onClicked.addListener((tab) => {
     console.log("Extension icon clicked, capturing and uploading...");
 
-    // Step 1: Capture the screenshot of the current tab
-    chrome.tabs.captureVisibleTab(null, { format: "png" }, (image) => {
-        if (chrome.runtime.lastError) {
-            console.error("Error capturing screenshot:", chrome.runtime.lastError);
-            displayNotification(tab.id, "Error capturing screenshot.");
-        } else {
-            console.log("Screenshot captured. Preparing to upload...");
-            displayNotification(tab.id, "Capturing and uploading...", true);
+    // Retrieve the saved question from Chrome storage
+    chrome.storage.local.get(["defaultQuestion"], (result) => {
+        const question = result.defaultQuestion || "Tell me about this image"; // Default question if none set
 
-            // Step 2: Upload the screenshot to the server
-            fetch("http://localhost:7001/upload-image", {
-                method: "POST",
-                body: createFormData(image),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === "success") {
-                        console.log("File successfully uploaded:", data.message);
-                        displayNotification(tab.id, `Success: ${data.message}`);
-                    } else {
-                        console.error("Failed to upload file:", data.message);
-                        displayNotification(tab.id, `Error: ${data.message}`);
-                    }
+        // Capture the screenshot
+        chrome.tabs.captureVisibleTab(null, { format: "png" }, (image) => {
+            if (chrome.runtime.lastError) {
+                console.error("Error capturing screenshot:", chrome.runtime.lastError);
+                displayNotification(tab.id, "Error capturing screenshot.");
+            } else {
+                console.log("Screenshot captured. Preparing to upload...");
+                displayNotification(tab.id, "Capturing and uploading...", true);
+
+                // Upload the screenshot with the question to the server
+                fetch("http://localhost:7001/upload-image", {
+                    method: "POST",
+                    body: createFormData(image, question),
                 })
-                .catch(error => {
-                    console.error("Upload error:", error);
-                    displayNotification(tab.id, "Error uploading screenshot.");
-                });
-        }
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === "success") {
+                            console.log("File successfully uploaded:", data.message);
+                            displayNotification(tab.id, `Success: ${data.message}`);
+                        } else {
+                            console.error("Failed to upload file:", data.message);
+                            displayNotification(tab.id, `Error: ${data.message}`);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Upload error:", error);
+                        displayNotification(tab.id, "Error uploading screenshot.");
+                    });
+            }
+        });
     });
 });
 
 // Helper function to convert base64 image data to FormData
-function createFormData(base64Image) {
+// Helper function to convert base64 image data to FormData
+function createFormData(base64Image, question) {
     const formData = new FormData();
     const byteString = atob(base64Image.split(",")[1]);
     const mimeString = base64Image.split(",")[0].split(":")[1].split(";")[0];
@@ -48,6 +54,7 @@ function createFormData(base64Image) {
 
     const blob = new Blob([arrayBuffer], { type: mimeString });
     formData.append("image", blob, "screenshot.png");
+    formData.append("question", question);
 
     return formData;
 }
