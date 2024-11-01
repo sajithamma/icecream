@@ -3,7 +3,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
     chrome.contextMenus.create({
         id: "iceCreamRun",
-        title: "Run 🕵️‍♂️",
+        title: "🕵️‍♂️ Run",
         contexts: ["all"]
     });
 
@@ -210,7 +210,7 @@ function uploadImage(tabId, base64Image, question) {
     console.log("Preparing image upload...");
     const formData = createFormData(base64Image, question);
 
-    fetch("http://localhost:7001/upload-image", {
+    fetch("https://icecream.capy.in/upload-image", {
         method: "POST",
         body: formData,
     })

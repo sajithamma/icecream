@@ -48,7 +48,10 @@ def upload_image():
         return jsonify({"status": "fail", "message": str(e)}), 500
     finally:
         # Remove the image after processing
-        os.remove(image_path)
+        if os.path.exists(image_path):
+            os.remove(image_path)
+        else:
+            print(f"Warning: File {image_path} not found when attempting to delete.")
 
     return jsonify({"status": "success", "message": response_text}), 200
 
