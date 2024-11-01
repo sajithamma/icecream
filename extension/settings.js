@@ -14,24 +14,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const notificationBar = document.getElementById("notificationBar");
 
     // Load saved settings
-    chrome.storage.local.get(["defaultQuestion", "captureMode"], (result) => {
+    chrome.storage.local.get(["defaultQuestion", "captureMode", "selectedPreset"], (result) => {
         if (result.defaultQuestion) {
             instructionsTextarea.value = result.defaultQuestion;
         }
         if (result.captureMode) {
             document.querySelector(`input[name="captureMode"][value="${result.captureMode}"]`).checked = true;
         }
+        if (result.selectedPreset) {
+            presetInstructions.value = result.selectedPreset;
+            instructionsTextarea.value = instructionsMap[result.selectedPreset];
+        }
     });
 
-    // Populate instructions text area based on the selected preset
+    // Update instructions text area based on selected preset
     if (presetInstructions && instructionsTextarea) {
         presetInstructions.addEventListener("change", () => {
             const selectedValue = presetInstructions.value;
             instructionsTextarea.value = instructionsMap[selectedValue];
         });
-
-        // Initialize with the default preset
-        instructionsTextarea.value = instructionsMap[presetInstructions.value];
     } else {
         console.error("Unable to find preset instructions or instructions textarea.");
     }
@@ -54,8 +55,13 @@ document.addEventListener("DOMContentLoaded", () => {
         saveButton.addEventListener("click", () => {
             const question = instructionsTextarea.value;
             const captureMode = document.querySelector('input[name="captureMode"]:checked').value;
+            const selectedPreset = presetInstructions.value;
 
-            chrome.storage.local.set({ defaultQuestion: question, captureMode: captureMode }, () => {
+            chrome.storage.local.set({
+                defaultQuestion: question,
+                captureMode: captureMode,
+                selectedPreset: selectedPreset
+            }, () => {
                 showNotification("Settings saved!");
             });
         });
