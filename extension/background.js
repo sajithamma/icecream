@@ -1,3 +1,21 @@
+// Create context menu item for settings
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.contextMenus.create({
+        id: "iceCreamSettings",
+        title: "ICE Cream - Settings",
+        contexts: ["all"]
+    });
+});
+
+// Handle the context menu click
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+    if (info.menuItemId === "iceCreamSettings") {
+        // Open the settings page
+        chrome.runtime.openOptionsPage();
+    }
+});
+
+
 // Listen for the extension icon click
 chrome.action.onClicked.addListener((tab) => {
     console.log("Extension icon clicked, initiating capture...");
