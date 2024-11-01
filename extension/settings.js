@@ -1,19 +1,20 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const questionInput = document.getElementById("question");
-    const saveButton = document.getElementById("saveButton");
+document.getElementById("saveButton").addEventListener("click", () => {
+    const question = document.getElementById("question").value;
+    const captureMode = document.querySelector('input[name="captureMode"]:checked').value;
 
-    // Load the saved question when settings page is opened
-    chrome.storage.local.get(["defaultQuestion"], (result) => {
-        if (result.defaultQuestion) {
-            questionInput.value = result.defaultQuestion;
-        }
+    chrome.storage.local.set({ defaultQuestion: question, captureMode: captureMode }, () => {
+        alert("Settings saved!");
     });
+});
 
-    // Save the question to Chrome storage when clicking save
-    saveButton.addEventListener("click", () => {
-        const defaultQuestion = questionInput.value || "Tell me about this image";
-        chrome.storage.local.set({ defaultQuestion }, () => {
-            alert("Question saved successfully!");
-        });
+// Load saved settings
+document.addEventListener("DOMContentLoaded", () => {
+    chrome.storage.local.get(["defaultQuestion", "captureMode"], (result) => {
+        if (result.defaultQuestion) {
+            document.getElementById("question").value = result.defaultQuestion;
+        }
+        if (result.captureMode) {
+            document.querySelector(`input[name="captureMode"][value="${result.captureMode}"]`).checked = true;
+        }
     });
 });

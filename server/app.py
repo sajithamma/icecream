@@ -43,6 +43,7 @@ def upload_image():
     try:
         # Process the image using the chosen handler
         response_text = handler.process_image(image_path, image_question)
+        print (response_text)
     except Exception as e:
         return jsonify({"status": "fail", "message": str(e)}), 500
     finally:

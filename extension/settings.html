@@ -32,14 +32,32 @@
             cursor: pointer;
             font-size: 1em;
         }
+
+        .option-group {
+            margin-top: 20px;
+        }
     </style>
 </head>
 
 <body>
     <h2>IceCreame Settings</h2>
+
     <label for="question">Default Question for Image Analysis:</label>
     <input type="text" id="question" placeholder="Tell me about this image">
-    <button id="saveButton">Save Question</button>
+
+    <div class="option-group">
+        <p>Select Capture Mode:</p>
+        <label>
+            <input type="radio" name="captureMode" value="viewport" checked>
+            Capture Entire Viewport
+        </label>
+        <label>
+            <input type="radio" name="captureMode" value="selection">
+            Capture Selected Area
+        </label>
+    </div>
+
+    <button id="saveButton">Save Settings</button>
 
     <script src="settings.js"></script>
 </body>
