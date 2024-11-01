@@ -4,60 +4,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IceCreame Settings</title>
+    <title>Ice Cream Settings</title>
     <style>
         body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
             font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
             padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            color: #1a73e8;
+            margin-bottom: 10px;
+        }
+
+        p.description {
+            font-size: 0.95em;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .setting-group {
+            margin-bottom: 20px;
+            text-align: left;
         }
 
         label {
             display: block;
-            margin-bottom: 10px;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
 
-        input[type="text"] {
+        textarea {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 20px;
+            height: 150px;
+            padding: 10px;
             font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #ddd;
+            margin: 30px 0 15px;
+        }
+
+        .option-group {
+            text-align: left;
+        }
+
+        .option-group p {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .option-group label {
+            font-weight: normal;
+            margin-bottom: 10px;
+            display: block;
         }
 
         button {
-            padding: 10px 15px;
+            padding: 10px 20px;
             background-color: #1a73e8;
             color: white;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
             font-size: 1em;
+            cursor: pointer;
+            width: 100%;
         }
 
-        .option-group {
-            margin-top: 20px;
+        button:hover {
+            background-color: #1667c1;
+        }
+
+        footer {
+            margin-top: 15px;
+            font-size: 0.85em;
+            color: #888;
+        }
+
+        footer a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 
 <body>
-    <h2>IceCreame Settings</h2>
 
-    <label for="question">Default Question for Image Analysis:</label>
-    <input type="text" id="question" placeholder="Tell me about this image">
+    <div class="container">
+        <h1>ICE Cream</h1>
+        <p class="description">Customize your ICE Cream experience with these settings.</p>
 
-    <div class="option-group">
-        <p>Select Capture Mode:</p>
-        <label>
-            <input type="radio" name="captureMode" value="viewport" checked>
-            Capture Entire Viewport
-        </label>
-        <label>
-            <input type="radio" name="captureMode" value="selection">
-            Capture Selected Area
-        </label>
+        <div class="setting-group">
+            <label for="instructions">Your instructions:</label>
+            <textarea id="instructions" placeholder="Provide specific instructions here..."></textarea>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="option-group">
+            <p>Select Capture Mode:</p>
+            <label>
+                <input type="radio" name="captureMode" value="viewport" checked>
+                Capture Entire Viewport
+            </label>
+            <label>
+                <input type="radio" name="captureMode" value="selection">
+                Capture Selected Area
+            </label>
+        </div>
+
+        <button id="saveButton">Save Settings</button>
     </div>
 
-    <button id="saveButton">Save Settings</button>
+    <footer>
+        <p>For more information, visit our <a href="https://yourwebsite.com" target="_blank">website</a>.</p>
+    </footer>
 
     <script src="settings.js"></script>
 </body>
