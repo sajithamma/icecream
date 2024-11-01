@@ -1,19 +1,19 @@
 // Listen for the extension icon click
 chrome.action.onClicked.addListener((tab) => {
-    console.log("Extension icon clicked, capturing and uploading...");
+    console.log("Extension icon clicked, initiating capture...");
 
     // Retrieve the saved question and capture mode from Chrome storage
     chrome.storage.local.get(["defaultQuestion", "captureMode"], (settings) => {
-        const question = settings.defaultQuestion || "Tell me about this image"; // Default question if none set
-        const captureMode = settings.captureMode || "viewport"; // Default to viewport if none set
+        const question = settings.defaultQuestion || "Tell me about this image";
+        const captureMode = settings.captureMode || "viewport";
 
-        // Step 1: Display initial notification with progress bar
-        displayNotification(tab.id, "Capturing and uploading...", true);
+        console.log(`Capture mode: ${captureMode}, Question: "${question}"`);
 
-        // Determine capture method based on capture mode
         if (captureMode === "viewport") {
+            displayNotification(tab.id, "Capturing and uploading...", true);
             captureFullViewport(tab.id, question);
         } else if (captureMode === "selection") {
+            console.log("Starting selection overlay for area capture...");
             captureSelectedArea(tab.id, question);
         }
     });
@@ -26,7 +26,7 @@ function captureFullViewport(tabId, question) {
             console.error("Error capturing screenshot:", chrome.runtime.lastError);
             displayNotification(tabId, "Error capturing screenshot.");
         } else {
-            console.log("Screenshot captured. Preparing to upload...");
+            console.log("Full viewport screenshot captured. Preparing to upload...");
             uploadImage(tabId, image, question);
         }
     });
@@ -36,73 +36,41 @@ function captureFullViewport(tabId, question) {
 function captureSelectedArea(tabId, question) {
     chrome.scripting.executeScript({
         target: { tabId: tabId },
-        func: addSelectionOverlay,
+        func: clearSelectionOverlay,
+    }).then(() => {
+        console.log("Cleared any previous selection overlay.");
     });
 
-    chrome.runtime.onMessage.addListener(function listener(request, sender, sendResponse) {
+    chrome.scripting.executeScript({
+        target: { tabId: tabId },
+        func: addSelectionOverlay,
+    }).then(() => {
+        console.log("Selection overlay injected.");
+    });
+
+    const listener = (request, sender, sendResponse) => {
+        console.log("Message received:", request);
         if (request.action === "captureArea" && request.imageData) {
+            console.log("Area selected. Starting upload...");
+            displayNotification(tabId, "Capturing and uploading...", true);
             uploadImage(tabId, request.imageData, question);
             chrome.runtime.onMessage.removeListener(listener);
         }
-    });
+    };
+
+    chrome.runtime.onMessage.addListener(listener);
 }
 
-// Helper function to upload image to the server
-function uploadImage(tabId, base64Image, question) {
-    const formData = createFormData(base64Image, question);
-
-    fetch("http://localhost:7001/upload-image", {
-        method: "POST",
-        body: formData,
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === "success") {
-                console.log("File successfully uploaded:", data.message);
-
-                // Load marked.min.js for Markdown rendering, then display the notification
-                chrome.scripting.executeScript({
-                    target: { tabId: tabId },
-                    files: ["marked.min.js"]
-                }).then(() => {
-                    // Display the final message with Markdown support
-                    displayNotification(tabId, data.message);
-                }).catch(error => {
-                    console.error("Error loading marked.js:", error);
-                    displayNotification(tabId, `Success: ${data.message}`);
-                });
-            } else {
-                console.error("Failed to upload file:", data.message);
-                displayNotification(tabId, `Error: ${data.message}`);
-            }
-        })
-        .catch(error => {
-            console.error("Upload error:", error);
-            displayNotification(tabId, "Error uploading screenshot.");
-        });
-}
-
-// Helper function to convert base64 image data to FormData
-function createFormData(base64Image, question) {
-    const formData = new FormData();
-    const byteString = atob(base64Image.split(",")[1]);
-    const mimeString = base64Image.split(",")[0].split(":")[1].split(";")[0];
-    const arrayBuffer = new ArrayBuffer(byteString.length);
-    const uint8Array = new Uint8Array(arrayBuffer);
-
-    for (let i = 0; i < byteString.length; i++) {
-        uint8Array[i] = byteString.charCodeAt(i);
-    }
-
-    const blob = new Blob([uint8Array], { type: mimeString });
-    formData.append("image", blob, "screenshot.png");
-    formData.append("question", question);
-
-    return formData;
+// Enhanced function to clear any previous selection overlays
+function clearSelectionOverlay() {
+    console.log("Clearing previous selection overlay...");
+    const overlays = document.querySelectorAll("#selection-overlay");
+    overlays.forEach(overlay => overlay.remove());
 }
 
 // Inject selection overlay into the page
 function addSelectionOverlay() {
+    console.log("Adding selection overlay...");
     const overlay = document.createElement("div");
     overlay.style.position = "fixed";
     overlay.style.top = "0";
@@ -112,6 +80,7 @@ function addSelectionOverlay() {
     overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
     overlay.style.zIndex = "9999";
     overlay.style.cursor = "crosshair";
+    overlay.id = "selection-overlay";
     document.body.appendChild(overlay);
 
     let startX, startY, endX, endY, selectionBox;
@@ -144,6 +113,8 @@ function addSelectionOverlay() {
             const width = Math.abs(endX - startX);
             const height = Math.abs(endY - startY);
 
+            console.log("Selected area:", { x, y, width, height });
+
             chrome.runtime.sendMessage({
                 action: "captureArea",
                 x, y, width, height
@@ -155,12 +126,67 @@ function addSelectionOverlay() {
     });
 }
 
+// Helper function to upload image to the server
+function uploadImage(tabId, base64Image, question) {
+    console.log("Preparing image upload...");
+    const formData = createFormData(base64Image, question);
+
+    fetch("http://localhost:7001/upload-image", {
+        method: "POST",
+        body: formData,
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Upload response received:", data);
+            if (data.status === "success") {
+                console.log("File successfully uploaded:", data.message);
+
+                chrome.scripting.executeScript({
+                    target: { tabId: tabId },
+                    files: ["marked.min.js"]
+                }).then(() => {
+                    displayNotification(tabId, data.message);
+                }).catch(error => {
+                    console.error("Error loading marked.js:", error);
+                    displayNotification(tabId, `Success: ${data.message}`);
+                });
+            } else {
+                console.error("Failed to upload file:", data.message);
+                displayNotification(tabId, `Error: ${data.message}`);
+            }
+        })
+        .catch(error => {
+            console.error("Upload error:", error);
+            displayNotification(tabId, "Error uploading screenshot.");
+        });
+}
+
+// Helper function to convert base64 image data to FormData
+function createFormData(base64Image, question) {
+    console.log("Creating FormData for upload...");
+    const formData = new FormData();
+    const byteString = atob(base64Image.split(",")[1]);
+    const mimeString = base64Image.split(",")[0].split(":")[1].split(";")[0];
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+
+    for (let i = 0; i < byteString.length; i++) {
+        uint8Array[i] = byteString.charCodeAt(i);
+    }
+
+    const blob = new Blob([uint8Array], { type: mimeString });
+    formData.append("image", blob, "screenshot.png");
+    formData.append("question", question);
+
+    return formData;
+}
+
 // Function to show a notification in the tab with optional Markdown rendering and progress bar
 function displayNotification(tabId, message, showProgress = false) {
     chrome.scripting.executeScript({
         target: { tabId: tabId },
         func: (message, showProgress) => {
-            // Create or update the notification element
+            console.log("Displaying notification...");
             let notification = document.getElementById("extension-notification");
             if (!notification) {
                 notification = document.createElement("div");
@@ -168,11 +194,12 @@ function displayNotification(tabId, message, showProgress = false) {
                 document.body.appendChild(notification);
             }
 
-            // Notification styling for a modern windowed look
             notification.style.position = "fixed";
             notification.style.bottom = "20px";
             notification.style.right = "20px";
             notification.style.width = "420px";
+            notification.style.maxHeight = "90vh";
+
             notification.style.backgroundColor = "#ffffff";
             notification.style.color = "#000000";
             notification.style.borderRadius = "10px";
@@ -180,15 +207,13 @@ function displayNotification(tabId, message, showProgress = false) {
             notification.style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
             notification.style.zIndex = "9999";
             notification.style.lineHeight = "1.2";
-            notification.style.overflow = "scroll";
+            notification.style.overflow = "auto";
 
-            // Convert message from Markdown to HTML if marked.js is loaded
             let renderedMessage = message;
             if (typeof marked !== "undefined") {
                 renderedMessage = marked.parse(message);
             }
 
-            // HTML structure with header, rendered message, and optional progress bar
             notification.innerHTML = `
                 <div style="background-color: #1a73e8; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; font-weight: bold;">
                     <span>IceCream</span>
@@ -200,7 +225,6 @@ function displayNotification(tabId, message, showProgress = false) {
                 </div>
             `;
 
-            // Progress bar animation if needed
             if (showProgress) {
                 let progressBar = notification.querySelector("#progress-bar");
                 let width = 0;
@@ -211,7 +235,6 @@ function displayNotification(tabId, message, showProgress = false) {
                 }, 300);
             }
 
-            // Close button functionality
             notification.querySelector("#close-notification").onclick = () => notification.remove();
         },
         args: [message, showProgress]
