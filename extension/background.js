@@ -10,7 +10,7 @@ chrome.action.onClicked.addListener((tab) => {
         console.log(`Capture mode: ${captureMode}, Question: "${question}"`);
 
         if (captureMode === "viewport") {
-            displayNotification(tab.id, "Capturing and uploading...", true);
+            displayNotification(tab.id, "Capturing data and analysing...", true);
             captureFullViewport(tab.id, question);
         } else if (captureMode === "selection") {
             console.log("Starting selection overlay for area capture...");
@@ -52,6 +52,8 @@ function captureSelectedArea(tabId, question) {
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (request.action === "captureArea" && request.x != null && request.y != null) {
             console.log("Area selected. Capturing full viewport and cropping to selection...");
+
+            displayNotification(sender.tab.id, "Capturing data and analysing...", true);
 
             chrome.tabs.captureVisibleTab(null, { format: "png" }, (image) => {
                 if (chrome.runtime.lastError) {
