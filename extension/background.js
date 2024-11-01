@@ -48,23 +48,41 @@ function captureSelectedArea(tabId, question) {
         console.log("Selection overlay injected.");
     });
 
-    const listener = (request, sender, sendResponse) => {
-        console.log("Message received:", request);
-        if (request.action === "captureArea" && request.imageData) {
-            console.log("Area selected. Starting upload...");
-            displayNotification(tabId, "Capturing and uploading...", true);
-            uploadImage(tabId, request.imageData, question);
-            chrome.runtime.onMessage.removeListener(listener);
-        }
-    };
+    // Listener for area coordinates from content script
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        if (request.action === "captureArea" && request.x != null && request.y != null) {
+            console.log("Area selected. Capturing full viewport and cropping to selection...");
 
-    chrome.runtime.onMessage.addListener(listener);
+            chrome.tabs.captureVisibleTab(null, { format: "png" }, (image) => {
+                if (chrome.runtime.lastError) {
+                    console.error("Error capturing screenshot:", chrome.runtime.lastError);
+                } else {
+                    console.log("Full screenshot captured. Injecting script to crop the image.");
+
+                    // Inject temporary content script for cropping
+                    chrome.scripting.executeScript({
+                        target: { tabId: sender.tab.id },
+                        func: cropAndSendImage,
+                        args: [image, request.x, request.y, request.width, request.height],
+                    });
+                }
+            });
+        }
+    });
+
+    // Listener for cropped image data from content script
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        if (request.action === "croppedImage" && request.imageData) {
+            console.log("Cropped image received. Preparing for upload...");
+            uploadImage(sender.tab.id, request.imageData, question);
+        }
+    });
 }
 
 // Enhanced function to clear any previous selection overlays
 function clearSelectionOverlay() {
     console.log("Clearing previous selection overlay...");
-    const overlays = document.querySelectorAll("#selection-overlay");
+    const overlays = document.querySelectorAll(".selection-overlay");
     overlays.forEach(overlay => overlay.remove());
 }
 
@@ -81,6 +99,7 @@ function addSelectionOverlay() {
     overlay.style.zIndex = "9999";
     overlay.style.cursor = "crosshair";
     overlay.id = "selection-overlay";
+    overlay.className = "selection-overlay";
     document.body.appendChild(overlay);
 
     let startX, startY, endX, endY, selectionBox;
@@ -93,7 +112,7 @@ function addSelectionOverlay() {
         selectionBox.style.border = "2px dashed #fff";
         selectionBox.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
         selectionBox.style.zIndex = "10000";
-        document.body.appendChild(selectionBox);
+        overlay.appendChild(selectionBox);
 
         function onMouseMove(e) {
             endX = e.clientX;
@@ -115,6 +134,7 @@ function addSelectionOverlay() {
 
             console.log("Selected area:", { x, y, width, height });
 
+            // Send selection coordinates to the background script
             chrome.runtime.sendMessage({
                 action: "captureArea",
                 x, y, width, height
@@ -124,6 +144,27 @@ function addSelectionOverlay() {
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", onMouseUp);
     });
+}
+
+// Crop and send the image as a temporary content script function
+function cropAndSendImage(base64Image, x, y, width, height) {
+    const img = new Image();
+    img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+
+        ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
+        const croppedImage = canvas.toDataURL("image/png");
+
+        // Send cropped image back to background script
+        chrome.runtime.sendMessage({
+            action: "croppedImage",
+            imageData: croppedImage
+        });
+    };
+    img.src = base64Image;
 }
 
 // Helper function to upload image to the server
