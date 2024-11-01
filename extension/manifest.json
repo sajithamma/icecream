@@ -20,6 +20,11 @@
             "128": "icon128.png"
         }
     },
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    },
     "options_page": "settings.html",
     "web_accessible_resources": [
         {
