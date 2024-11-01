@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "IceCreame",
+    "name": "ICE Cream",
     "version": "1.0",
-    "description": "IceCreame Screenshot",
+    "description": "ICE Cream Screenshot",
     "permissions": [
         "activeTab",
         "scripting",

@@ -1,10 +1,19 @@
-// Create context menu item for settings
+// Create context menu items for settings and run
 chrome.runtime.onInstalled.addListener(() => {
+
     chrome.contextMenus.create({
-        id: "iceCreamSettings",
-        title: "ICE Cream - Settings",
+        id: "iceCreamRun",
+        title: "Run 🕵️‍♂️",
         contexts: ["all"]
     });
+
+    chrome.contextMenus.create({
+        id: "iceCreamSettings",
+        title: "⚙️ Settings",
+        contexts: ["all"]
+    });
+
+
 });
 
 // Handle the context menu click
@@ -13,12 +22,15 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         // Open the settings page
         chrome.runtime.openOptionsPage();
     }
+    else if (info.menuItemId === "iceCreamRun") {
+        // Run the main functionality
+        runIceCream(tab);
+    }
 });
 
-
-// Listen for the extension icon click
-chrome.action.onClicked.addListener((tab) => {
-    console.log("Extension icon clicked, initiating capture...");
+// Function to run the main functionality
+function runIceCream(tab) {
+    console.log("Running ICE Cream, initiating capture...");
 
     // Retrieve the saved question and capture mode from Chrome storage
     chrome.storage.local.get(["defaultQuestion", "captureMode"], (settings) => {
@@ -35,6 +47,12 @@ chrome.action.onClicked.addListener((tab) => {
             captureSelectedArea(tab.id, question);
         }
     });
+}
+
+
+// Listen for the extension icon click
+chrome.action.onClicked.addListener((tab) => {
+    runIceCream(tab);
 });
 
 // Capture the full viewport and upload it
@@ -281,7 +299,7 @@ function displayNotification(tabId, message, showProgress = false) {
                     <button id="close-notification" style="background: none; border: none; color: white; font-weight: bold; cursor: pointer; font-size: 1.2em; line-height: 1;">&times;</button>
                 </div>
                 <div style="padding: 20px;">
-                    <div style="font-size: 12px;">${renderedMessage}</div>
+                    <div style="font-size: 12px; padding-left:5px">${renderedMessage}</div>
                     ${showProgress ? '<div id="progress-bar" style="margin-top: 10px; height: 6px; background-color: #4CAF50; border-radius: 3px; width: 0;"></div>' : ''}
                 </div>
             `;
