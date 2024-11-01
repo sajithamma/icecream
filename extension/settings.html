@@ -28,6 +28,12 @@
             text-align: center;
         }
 
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+        }
+
         h1 {
             font-size: 1.8em;
             color: #1a73e8;
@@ -51,15 +57,20 @@
             margin-bottom: 5px;
         }
 
+        select,
         textarea {
             width: 100%;
-            height: 150px;
             padding: 10px;
             font-size: 1em;
             border: 1px solid #ddd;
             border-radius: 5px;
-            resize: vertical;
             box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            height: 150px;
+            resize: vertical;
         }
 
         .divider {
@@ -118,8 +129,20 @@
 <body>
 
     <div class="container">
+        <img src="icon128.png" alt="Ice Cream Logo" class="logo">
+
         <h1>ICE Cream</h1>
         <p class="description">Customize your ICE Cream experience with these settings.</p>
+
+        <div class="setting-group">
+            <label for="presetInstructions">Choose Preset Instructions:</label>
+            <select id="presetInstructions">
+                <option value="basic">Basic</option>
+                <option value="quiz">Quiz</option>
+                <option value="linkedin">LinkedIn</option>
+                <option value="custom">Custom</option>
+            </select>
+        </div>
 
         <div class="setting-group">
             <label for="instructions">Your instructions:</label>
@@ -148,6 +171,27 @@
     </footer>
 
     <script src="settings.js"></script>
+    <script>
+        // Preset instructions for dropdown
+        const instructionsMap = {
+            basic: "Analyse the full page of the website and get me information on what it says.",
+            quiz: "Read the question and help me to answer it.",
+            linkedin: "Read the profile and draft a marketing message I can send.",
+            custom: "" // Custom leaves the text area empty
+        };
+
+        // Populate the instructions text area based on the selected preset
+        const presetInstructions = document.getElementById("presetInstructions");
+        const instructionsTextarea = document.getElementById("instructions");
+
+        presetInstructions.addEventListener("change", () => {
+            const selectedValue = presetInstructions.value;
+            instructionsTextarea.value = instructionsMap[selectedValue];
+        });
+
+        // Initialize with the default preset
+        instructionsTextarea.value = instructionsMap[presetInstructions.value];
+    </script>
 </body>
 
 </html>
