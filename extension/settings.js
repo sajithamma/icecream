@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Preset instructions for dropdown
     const instructionsMap = {
         basic: "Analyse the full page of the website and get me information on what it says.",
-        quiz: "Read the question and help me to answer it.",
+        quiz: "Please read each question carefully and provide the most accurate answer. For multiple-choice questions, identify the correct choice. If choices aren’t numbered (e.g., 1, 2, 3 or A, B, C), assign numbers to each option from left to right, and indicate the answer by referencing the option number. For written responses, provide a clear and concise answer to input. In cases where there are multiple questions, answer each one in sequence, labeling them by question number or a unique portion of the question text. If a question appears incomplete or cut off, disregard it and answer only those that are fully visible. Additionally, some questions may contain images; examine these closely and respond accurately based on what is displayed.",
         linkedin: "Read the profile and draft a marketing message I can send.",
         custom: "" // Custom leaves the text area empty
     };
