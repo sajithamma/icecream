@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const presetInstructions = document.getElementById("presetInstructions");
     const instructionsTextarea = document.getElementById("instructions");
     const saveButton = document.getElementById("saveButton");
-    const authSection = document.getElementById("authSection"); // Placeholder for Logout button
+    const authSection = document.getElementById("authSection"); // Placeholder for login/logout buttons
 
     // Load saved settings
     chrome.storage.local.get(["defaultQuestion", "captureMode", "selectedPreset", "userEmail"], (result) => {
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
             instructionsTextarea.value = instructionsMap[result.selectedPreset];
         }
 
-        // Display Logout button if user is logged in
+        // Display appropriate auth button
         if (result.userEmail) {
             authSection.innerHTML = `
                 <p style="color: green; font-size: 14px;">Logged in as ${result.userEmail}</p>
@@ -45,7 +45,40 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             authSection.innerHTML = `
                 <p style="color: red; font-size: 14px;">Not logged in. Please log in to use the plugin.</p>
+                <button id="loginButton" style="background-color: #1a73e8; color: white; margin-top: 15px;">Login</button>
             `;
+
+            // Attach login button event listener
+            document.getElementById("loginButton").addEventListener("click", () => {
+                chrome.identity.getAuthToken({ interactive: true }, (token) => {
+                    if (chrome.runtime.lastError || !token) {
+                        alert("Failed to log in with Google. Please try again.");
+                        console.error("Google Login Error:", chrome.runtime.lastError);
+                        return;
+                    }
+
+                    // Fetch user info using the token
+                    fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+                        headers: { Authorization: `Bearer ${token}` }
+                    })
+                        .then((response) => response.json())
+                        .then((user) => {
+                            if (user.email) {
+                                console.log("Google User:", user);
+                                chrome.storage.local.set({ userEmail: user.email }, () => {
+                                    alert(`Logged in as ${user.email}`);
+                                    window.location.reload(); // Reload the page after login
+                                });
+                            } else {
+                                alert("Failed to fetch user information.");
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching user info:", error);
+                            alert("An error occurred. Please try again.");
+                        });
+                });
+            });
         }
     });
 
