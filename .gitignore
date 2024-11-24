@@ -3,3 +3,5 @@ server/.env
 server/uploaded_images
 __pycache__/
 app.db
+backup.env.dev
+backup.env.prod
