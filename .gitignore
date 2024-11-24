@@ -2,3 +2,4 @@ venv
 server/.env
 server/uploaded_images
 __pycache__/
+app.db
