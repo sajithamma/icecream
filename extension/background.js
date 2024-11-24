@@ -24,8 +24,15 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     }
     else if (info.menuItemId === "iceCreamRun") {
         ensureLoggedIn((email) => {
-            console.log("Logged in as:", email);
-            runIceCream(tab); // Continue with the main functionality
+            console.log(`User ${email} is ready to run IceCream.`);
+            // Do nothing after login; let the user click again for screenshot
+            chrome.notifications.create({
+                type: "basic",
+                iconUrl: "icon128.png",
+                title: "Ready to Use",
+                message: `You are logged in as ${email}. Click "Run" again to capture a screenshot.`,
+                priority: 2
+            });
         });
     }
 });
@@ -33,20 +40,19 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 function googleLogin(callback) {
     chrome.identity.getAuthToken({ interactive: true }, (token) => {
         if (chrome.runtime.lastError || !token) {
-            console.error("Google Login Error:", chrome.runtime.lastError);
+            console.error("Google Login Error:", chrome.runtime.lastError ? chrome.runtime.lastError.message : "Unknown error");
 
-            // Use Chrome Notifications API to show the error
+            // Show error notification
             chrome.notifications.create({
                 type: "basic",
                 iconUrl: "icon128.png",
                 title: "Login Error",
                 message: "Failed to log in with Google. Please try again."
             });
-
             return;
         }
 
-        // Use the token to get user info
+        // Use the token to fetch user info
         fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
             headers: { Authorization: `Bearer ${token}` },
         })
@@ -54,8 +60,24 @@ function googleLogin(callback) {
             .then((user) => {
                 if (user.email) {
                     console.log("Google User:", user);
+
+                    // Save user email locally
                     chrome.storage.local.set({ userEmail: user.email }, () => {
                         console.log("User email saved:", user.email);
+
+                        // Show success message
+                        chrome.notifications.create({
+                            type: "basic",
+                            iconUrl: "icon128.png",
+                            title: "Login Successful",
+                            message: `You are now logged in as ${user.email}. Go to settings to configure the plugin.`,
+                            priority: 2
+                        });
+
+                        // Redirect to settings page
+                        chrome.runtime.openOptionsPage();
+
+                        // Call the callback if needed
                         if (callback) callback(user.email);
                     });
                 } else {
@@ -67,18 +89,30 @@ function googleLogin(callback) {
 }
 
 
+
 // Check if user is logged in before proceeding
 function ensureLoggedIn(callback) {
     chrome.storage.local.get("userEmail", (result) => {
         if (result.userEmail) {
             console.log("User already logged in:", result.userEmail);
-            callback(result.userEmail);
+            if (callback) callback(result.userEmail);
         } else {
             console.log("No user logged in. Prompting Google login...");
-            googleLogin(callback);
+            googleLogin((email) => {
+                console.log(`User ${email} logged in.`);
+                // Optionally, notify the user that they are now logged in
+                chrome.notifications.create({
+                    type: "basic",
+                    iconUrl: "icon128.png",
+                    title: "Login Successful",
+                    message: `You are now logged in as ${email}. You can now use the plugin.`,
+                    priority: 2
+                });
+            });
         }
     });
 }
+
 
 // Function to run the main functionality
 function runIceCream(tab) {
@@ -115,8 +149,15 @@ function runIceCream(tab) {
 // Listen for the extension icon click
 chrome.action.onClicked.addListener((tab) => {
     ensureLoggedIn((email) => {
-        console.log("Logged in as:", email);
-        runIceCream(tab); // Continue with the main functionality
+        console.log(`User ${email} is ready to run IceCream.`);
+        // Do nothing after login; let the user click again for screenshot
+        chrome.notifications.create({
+            type: "basic",
+            iconUrl: "icon128.png",
+            title: "Ready to Use",
+            message: `You are logged in as ${email}. Click the icon again to capture a screenshot.`,
+            priority: 2
+        });
     });
 });
 

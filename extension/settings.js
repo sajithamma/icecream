@@ -7,14 +7,14 @@ document.addEventListener("DOMContentLoaded", () => {
         custom: "" // Custom leaves the text area empty
     };
 
-    // DOM elements
     const presetInstructions = document.getElementById("presetInstructions");
     const instructionsTextarea = document.getElementById("instructions");
     const saveButton = document.getElementById("saveButton");
-    const notificationBar = document.getElementById("notificationBar");
+    const authSection = document.getElementById("authSection"); // Placeholder for Logout button
 
     // Load saved settings
-    chrome.storage.local.get(["defaultQuestion", "captureMode", "selectedPreset"], (result) => {
+    chrome.storage.local.get(["defaultQuestion", "captureMode", "selectedPreset", "userEmail"], (result) => {
+        // Handle default instructions
         if (result.defaultQuestion) {
             instructionsTextarea.value = result.defaultQuestion;
         }
@@ -25,45 +25,48 @@ document.addEventListener("DOMContentLoaded", () => {
             presetInstructions.value = result.selectedPreset;
             instructionsTextarea.value = instructionsMap[result.selectedPreset];
         }
+
+        // Display Logout button if user is logged in
+        if (result.userEmail) {
+            authSection.innerHTML = `
+                <p style="color: green; font-size: 14px;">Logged in as ${result.userEmail}</p>
+                <button id="logoutButton" style="background-color: #f44336; color: white; margin-top: 15px;">Logout</button>
+            `;
+
+            // Attach logout button event listener
+            document.getElementById("logoutButton").addEventListener("click", () => {
+                if (confirm("Are you sure you want to log out?")) {
+                    chrome.storage.local.remove("userEmail", () => {
+                        alert("You have been logged out. Please log in again to use the plugin.");
+                        window.location.reload(); // Reload the page after logout
+                    });
+                }
+            });
+        } else {
+            authSection.innerHTML = `
+                <p style="color: red; font-size: 14px;">Not logged in. Please log in to use the plugin.</p>
+            `;
+        }
     });
 
     // Update instructions text area based on selected preset
-    if (presetInstructions && instructionsTextarea) {
-        presetInstructions.addEventListener("change", () => {
-            const selectedValue = presetInstructions.value;
-            instructionsTextarea.value = instructionsMap[selectedValue];
+    presetInstructions.addEventListener("change", () => {
+        const selectedValue = presetInstructions.value;
+        instructionsTextarea.value = instructionsMap[selectedValue];
+    });
+
+    // Save settings
+    saveButton.addEventListener("click", () => {
+        const question = instructionsTextarea.value;
+        const captureMode = document.querySelector('input[name="captureMode"]:checked').value;
+        const selectedPreset = presetInstructions.value;
+
+        chrome.storage.local.set({
+            defaultQuestion: question,
+            captureMode: captureMode,
+            selectedPreset: selectedPreset
+        }, () => {
+            alert("Settings saved!");
         });
-    } else {
-        console.error("Unable to find preset instructions or instructions textarea.");
-    }
-
-    // Show notification
-    function showNotification(message) {
-        notificationBar.textContent = message;
-        notificationBar.style.display = "block";
-        setTimeout(() => {
-            notificationBar.style.opacity = 0;
-            setTimeout(() => {
-                notificationBar.style.display = "none";
-                notificationBar.style.opacity = 1;
-            }, 500);
-        }, 2000); // Display for 2 seconds before fading out
-    }
-
-    // Save settings when Save button is clicked
-    if (saveButton) {
-        saveButton.addEventListener("click", () => {
-            const question = instructionsTextarea.value;
-            const captureMode = document.querySelector('input[name="captureMode"]:checked').value;
-            const selectedPreset = presetInstructions.value;
-
-            chrome.storage.local.set({
-                defaultQuestion: question,
-                captureMode: captureMode,
-                selectedPreset: selectedPreset
-            }, () => {
-                showNotification("Settings saved!");
-            });
-        });
-    }
+    });
 });
