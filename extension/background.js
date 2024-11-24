@@ -23,13 +23,75 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         chrome.runtime.openOptionsPage();
     }
     else if (info.menuItemId === "iceCreamRun") {
-        // Run the main functionality
-        runIceCream(tab);
+        ensureLoggedIn((email) => {
+            console.log("Logged in as:", email);
+            runIceCream(tab); // Continue with the main functionality
+        });
     }
 });
 
+function googleLogin(callback) {
+    chrome.identity.getAuthToken({ interactive: true }, (token) => {
+        if (chrome.runtime.lastError || !token) {
+            console.error("Google Login Error:", chrome.runtime.lastError);
+
+            // Use Chrome Notifications API to show the error
+            chrome.notifications.create({
+                type: "basic",
+                iconUrl: "icon128.png",
+                title: "Login Error",
+                message: "Failed to log in with Google. Please try again."
+            });
+
+            return;
+        }
+
+        // Use the token to get user info
+        fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+            .then((response) => response.json())
+            .then((user) => {
+                if (user.email) {
+                    console.log("Google User:", user);
+                    chrome.storage.local.set({ userEmail: user.email }, () => {
+                        console.log("User email saved:", user.email);
+                        if (callback) callback(user.email);
+                    });
+                } else {
+                    console.error("Failed to fetch user info:", user);
+                }
+            })
+            .catch((err) => console.error("Error fetching user info:", err));
+    });
+}
+
+
+// Check if user is logged in before proceeding
+function ensureLoggedIn(callback) {
+    chrome.storage.local.get("userEmail", (result) => {
+        if (result.userEmail) {
+            console.log("User already logged in:", result.userEmail);
+            callback(result.userEmail);
+        } else {
+            console.log("No user logged in. Prompting Google login...");
+            googleLogin(callback);
+        }
+    });
+}
+
 // Function to run the main functionality
 function runIceCream(tab) {
+
+    chrome.storage.local.get("userEmail", (result) => {
+        if (!result.userEmail) {
+            alert("Please log in with Google to use the extension.");
+            return;
+        }
+        console.log("Running IceCream for user:", result.userEmail);
+        // Proceed with the main functionality
+    });
+
     console.log("Running ICE Cream, initiating capture...");
 
     // Retrieve the saved question and capture mode from Chrome storage
@@ -52,7 +114,10 @@ function runIceCream(tab) {
 
 // Listen for the extension icon click
 chrome.action.onClicked.addListener((tab) => {
-    runIceCream(tab);
+    ensureLoggedIn((email) => {
+        console.log("Logged in as:", email);
+        runIceCream(tab); // Continue with the main functionality
+    });
 });
 
 // Capture the full viewport and upload it

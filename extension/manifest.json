@@ -7,7 +7,9 @@
         "activeTab",
         "scripting",
         "storage",
-        "contextMenus"
+        "contextMenus",
+        "identity",
+        "notifications"
     ],
     "background": {
         "service_worker": "background.js"
@@ -44,5 +46,11 @@
                 "content.js"
             ]
         }
-    ]
+    ],
+    "oauth2": {
+        "client_id": "304459605374-jgpv6t7mjsag7ik9fq94ikrivkmr9vdt.apps.googleusercontent.com",
+        "scopes": [
+            "https://www.googleapis.com/auth/userinfo.email"
+        ]
+    }
 }
