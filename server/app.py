@@ -5,6 +5,81 @@ from config import Config
 from handlers.openai_handler import OpenAIHandler
 from handlers.gemini_handler import GeminiHandler
 import requests
+import sqlite3
+from uuid import uuid4
+from datetime import datetime
+
+DB_FILE = "app.db"
+
+# Initialize the database
+def init_db():
+    with sqlite3.connect(DB_FILE) as conn:
+        cursor = conn.cursor()
+        # Create users table
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id TEXT PRIMARY KEY,
+            email TEXT UNIQUE NOT NULL,
+            credits INTEGER NOT NULL DEFAULT 20,
+            status TEXT NOT NULL DEFAULT 'ACTIVE',
+            timestamp TEXT NOT NULL
+        )
+        """)
+
+        # Create activities table
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS activities (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT NOT NULL,
+            email TEXT NOT NULL,
+            question TEXT NOT NULL,
+            image_path TEXT NOT NULL,
+            timestamp TEXT NOT NULL,
+            FOREIGN KEY(user_id) REFERENCES users(id)
+        )
+        """)
+
+# Call this during app initialization
+init_db()
+
+def get_or_create_user(email):
+    """
+    Get a user from the database or create them if they don't exist.
+    """
+    with sqlite3.connect(DB_FILE) as conn:
+        cursor = conn.cursor()
+
+        # Check if the user exists
+        cursor.execute("SELECT id, credits FROM users WHERE email = ?", (email,))
+        user = cursor.fetchone()
+
+        if not user:
+            # Create a new user
+            user_id = str(uuid4())
+            timestamp = datetime.now().isoformat()
+            cursor.execute(
+                "INSERT INTO users (id, email, credits, status, timestamp) VALUES (?, ?, ?, ?, ?)",
+                (user_id, email, 20, "ACTIVE", timestamp)
+            )
+            conn.commit()
+            return user_id, 20
+        else:
+            return user[0], user[1]  # Return user_id and credits
+
+
+def log_activity(user_id, email, question, image_path):
+    """
+    Log an activity in the activities table.
+    """
+    with sqlite3.connect(DB_FILE) as conn:
+        cursor = conn.cursor()
+        timestamp = datetime.now().isoformat()
+        cursor.execute(
+            "INSERT INTO activities (user_id, email, question, image_path, timestamp) VALUES (?, ?, ?, ?, ?)",
+            (user_id, email, question, image_path, timestamp)
+        )
+        conn.commit()
+
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -55,7 +130,7 @@ def upload_image():
     if not email or not token:
         return jsonify({"status": "fail", "message": "Missing email or auth token"}), 400
 
-    # Validate the token (you can implement token validation logic here)
+    # Validate the token
     if not validate_token(token, email):
         return jsonify({"status": "fail", "message": "Invalid or expired auth token"}), 401
 
@@ -77,8 +152,25 @@ def upload_image():
     image_question += " Note: Read the full text, also images, diagrams, charts etc, and use it wise to answer the question.  Get the result in proper spacing and proper punctuations."
 
     try:
+        # Get or create the user
+        user_id, credits = get_or_create_user(email)
+
+        # Check if the user has enough credits
+        if credits <= 0:
+            return jsonify({"status": "fail", "message": "Insufficient credits"}), 403
+
         # Process the image using the chosen handler
         response_text = handler.process_image(image_path, image_question)
+
+        # Log the activity
+        log_activity(user_id, email, image_question, image_path)
+
+        # Deduct one credit
+        with sqlite3.connect(DB_FILE) as conn:
+            cursor = conn.cursor()
+            cursor.execute("UPDATE users SET credits = credits - 1 WHERE id = ?", (user_id,))
+            conn.commit()
+
         print(response_text)
     except Exception as e:
         return jsonify({"status": "fail", "message": str(e)}), 500
@@ -90,6 +182,7 @@ def upload_image():
             print(f"Warning: File {image_path} not found when attempting to delete.")
 
     return jsonify({"status": "success", "message": response_text}), 200
+
 
 
 if __name__ == '__main__':
