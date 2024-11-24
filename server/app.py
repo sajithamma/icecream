@@ -9,6 +9,7 @@ from uuid import uuid4
 
 from db import init_db, get_or_create_user, log_activity, deduct_credit
 from payment_routes import payment_routes
+from blueprints.static_pages import static_pages_bp
 
 
 # Call this during app initialization
@@ -16,6 +17,7 @@ init_db()
 
 # Initialize Flask app
 app = Flask(__name__)
+app.register_blueprint(static_pages_bp)
 app.register_blueprint(payment_routes)
 
 
