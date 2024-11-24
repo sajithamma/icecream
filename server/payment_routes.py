@@ -50,76 +50,129 @@ def buy_credits():
 # Route to initiate a payment
 @payment_routes.route('/create-order', methods=['POST'])
 def create_order():
-    email = request.form.get("email")
+    # Log the incoming request data for debugging
+    print("Incoming create-order request data:", request.json)
+
+    email = request.json.get("email")
     if not email:
+        print("Missing email in request")
         return jsonify({"status": "fail", "message": "Email is required"}), 400
 
-    # Create Razorpay order
-    amount = 800  # Amount in cents (for Rs. 8.00, this should be 800 paisa)
+    # Create a unique transaction ID
+    transaction_id = str(uuid4())
+
+    # Define amount and currency
+    amount = 800  # Amount in smallest currency unit (₹8.00 = 800 paisa)
     currency = "INR"
-    order_data = {
-        "amount": amount * 100,  # Razorpay expects amount in the smallest currency unit
-        "currency": currency,
-        "receipt": str(uuid4()),
-    }
-    order = razorpay_client.order.create(order_data)
 
-    # Log the payment in the database
-    order_id = order.get("id")
-    with sqlite3.connect(DB_FILE) as conn:
-        cursor = conn.cursor()
-        timestamp = datetime.now().isoformat()
-        cursor.execute("""
-        INSERT INTO payments (id, email, order_id, amount, currency, status, timestamp)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-        """, (str(uuid4()), email, order_id, amount, currency, "PENDING", timestamp))
-        conn.commit()
+    # Log the payment in the database with PENDING status
+    try:
+        with sqlite3.connect(DB_FILE) as conn:
+            cursor = conn.cursor()
+            timestamp = datetime.now().isoformat()
+            cursor.execute("""
+            INSERT INTO payments (id, email, order_id, amount, currency, status, timestamp)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (transaction_id, email, "", amount, currency, "PENDING", timestamp))
+            conn.commit()
+    except Exception as e:
+        print("Error saving payment in database:", str(e))
+        return jsonify({"status": "fail", "message": "Error initializing payment"}), 500
 
-    return jsonify({"order_id": order_id, "amount": amount, "currency": currency})
+    # Create Razorpay order
+    try:
+        order_data = {
+            "amount": amount * 100,  # Razorpay expects amount in the smallest currency unit
+            "currency": currency,
+            "receipt": transaction_id,  # Use transaction_id as receipt
+        }
+        order = razorpay_client.order.create(order_data)
+
+        # Update the payment record with the Razorpay order ID
+        with sqlite3.connect(DB_FILE) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+            UPDATE payments
+            SET order_id = ?
+            WHERE id = ?
+            """, (order.get("id"), transaction_id))
+            conn.commit()
+
+        # Log the Razorpay order for debugging
+        print("Razorpay order created:", order)
+
+        return jsonify({
+            "order_id": order.get("id"),
+            "transaction_id": transaction_id,
+            "amount": amount,
+            "currency": currency
+        })
+    except Exception as e:
+        print("Error creating Razorpay order:", str(e))
+        return jsonify({"status": "fail", "message": "Error creating payment order"}), 500
+
+
 
 
 # Route to handle payment success callback
 @payment_routes.route('/payment-success', methods=['POST'])
 def payment_success():
+    # Log the incoming request data for debugging
+    print("Incoming payment-success request data:", request.json)
+
     payload = request.json
     order_id = payload.get("order_id")
     payment_id = payload.get("payment_id")
     signature = payload.get("signature")
 
+    # Log individual fields
+    print("Received order_id:", order_id)
+    print("Received payment_id:", payment_id)
+    print("Received signature:", signature)
+
     if not all([order_id, payment_id, signature]):
+        print("Missing required fields in payment-success request")
         return jsonify({"status": "fail", "message": "Missing required fields"}), 400
 
-    # Verify Razorpay signature
     try:
+        # Verify Razorpay signature
         razorpay_client.utility.verify_payment_signature({
             "razorpay_order_id": order_id,
             "razorpay_payment_id": payment_id,
             "razorpay_signature": signature
         })
-    except razorpay.errors.SignatureVerificationError:
+    except razorpay.errors.SignatureVerificationError as e:
+        print("Signature verification failed:", str(e))
         return jsonify({"status": "fail", "message": "Invalid signature"}), 400
 
-    # Update the payment status and credit the user
-    with sqlite3.connect(DB_FILE) as conn:
-        cursor = conn.cursor()
+    try:
+        # Update the payment status and credit the user
+        with sqlite3.connect(DB_FILE) as conn:
+            cursor = conn.cursor()
 
-        # Update payment status
-        cursor.execute("""
-        UPDATE payments
-        SET payment_id = ?, signature = ?, status = 'COMPLETED'
-        WHERE order_id = ?
-        """, (payment_id, signature, order_id))
+            # Update payment status
+            cursor.execute("""
+            UPDATE payments
+            SET payment_id = ?, signature = ?, status = 'COMPLETED'
+            WHERE order_id = ?
+            """, (payment_id, signature, order_id))
 
-        # Retrieve the user's email
-        cursor.execute("SELECT email FROM payments WHERE order_id = ?", (order_id,))
-        result = cursor.fetchone()
-        if not result:
-            return jsonify({"status": "fail", "message": "Order not found"}), 404
+            # Retrieve the user's email
+            cursor.execute("SELECT email FROM payments WHERE order_id = ?", (order_id,))
+            result = cursor.fetchone()
+            if not result:
+                print("Order not found in database")
+                return jsonify({"status": "fail", "message": "Order not found"}), 404
 
-        email = result[0]
+            email = result[0]
 
-        # Add 100 credits to the user's account
-        cursor.execute("UPDATE users SET credits = credits + 100 WHERE email = ?", (email,))
-        conn.commit()
+            # Add 100 credits to the user's account
+            cursor.execute("UPDATE users SET credits = credits + 100 WHERE email = ?", (email,))
+            conn.commit()
 
-    return jsonify({"status": "success", "message": "Payment successful, credits added"}), 200
+        print("Payment successfully processed for email:", email)
+        return jsonify({"status": "success", "message": "Payment successful, credits added"}), 200
+    except Exception as e:
+        print("Error in payment-success:", str(e))
+        return jsonify({"status": "fail", "message": "Error processing payment"}), 500
+
