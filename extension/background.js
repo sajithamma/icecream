@@ -302,40 +302,65 @@ function cropAndSendImage(base64Image, x, y, width, height) {
 // Helper function to upload image to the server
 function uploadImage(tabId, base64Image, question) {
     console.log("Preparing image upload...");
-    const formData = createFormData(base64Image, question);
 
-    fetch("https://icecream.capy.in/upload-image", {
-        method: "POST",
-        body: formData,
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Upload response received:", data);
-            if (data.status === "success") {
-                console.log("File successfully uploaded:", data.message);
+    // Retrieve user email and token
+    chrome.storage.local.get("userEmail", (result) => {
+        const email = result.userEmail;
 
-                chrome.scripting.executeScript({
-                    target: { tabId: tabId },
-                    files: ["marked.min.js"]
-                }).then(() => {
-                    displayNotification(tabId, data.message);
-                }).catch(error => {
-                    console.error("Error loading marked.js:", error);
-                    displayNotification(tabId, `Success: ${data.message}`);
-                });
-            } else {
-                console.error("Failed to upload file:", data.message);
-                displayNotification(tabId, `Error: ${data.message}`);
+        // Ensure the user is logged in
+        if (!email) {
+            console.error("User is not logged in. Aborting API call.");
+            displayNotification(tabId, "You must be logged in to use this feature.");
+            return;
+        }
+
+        // Get OAuth token
+        chrome.identity.getAuthToken({ interactive: false }, (token) => {
+            if (!token) {
+                console.error("OAuth token not available. Aborting API call.");
+                displayNotification(tabId, "Authentication token missing. Please log in again.");
+                return;
             }
-        })
-        .catch(error => {
-            console.error("Upload error:", error);
-            displayNotification(tabId, "Error uploading screenshot.");
+
+            // Create form data with email and token
+            const formData = createFormData(base64Image, question, email, token);
+
+            // Make the API call
+            fetch("https://icecream.capy.in/upload-image", {
+                method: "POST",
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Upload response received:", data);
+                    if (data.status === "success") {
+                        console.log("File successfully uploaded:", data.message);
+
+                        chrome.scripting.executeScript({
+                            target: { tabId: tabId },
+                            files: ["marked.min.js"]
+                        }).then(() => {
+                            displayNotification(tabId, data.message);
+                        }).catch(error => {
+                            console.error("Error loading marked.js:", error);
+                            displayNotification(tabId, `Success: ${data.message}`);
+                        });
+                    } else {
+                        console.error("Failed to upload file:", data.message);
+                        displayNotification(tabId, `Error: ${data.message}`);
+                    }
+                })
+                .catch(error => {
+                    console.error("Upload error:", error);
+                    displayNotification(tabId, "Error uploading screenshot.");
+                });
         });
+    });
 }
 
+
 // Helper function to convert base64 image data to FormData
-function createFormData(base64Image, question) {
+function createFormData(base64Image, question, email, token) {
     console.log("Creating FormData for upload...");
     const formData = new FormData();
     const byteString = atob(base64Image.split(",")[1]);
@@ -350,6 +375,8 @@ function createFormData(base64Image, question) {
     const blob = new Blob([uint8Array], { type: mimeString });
     formData.append("image", blob, "screenshot.png");
     formData.append("question", question);
+    formData.append("email", email);
+    formData.append("authToken", token); // Add the token for server-side validation
 
     return formData;
 }
