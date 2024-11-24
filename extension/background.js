@@ -26,13 +26,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         ensureLoggedIn((email) => {
             console.log(`User ${email} is ready to run IceCream.`);
             // Do nothing after login; let the user click again for screenshot
-            chrome.notifications.create({
-                type: "basic",
-                iconUrl: "icon128.png",
-                title: "Ready to Use",
-                message: `You are logged in as ${email}. Click "Run" again to capture a screenshot.`,
-                priority: 2
-            });
+            runIceCream(tab);
         });
     }
 });
@@ -151,13 +145,7 @@ chrome.action.onClicked.addListener((tab) => {
     ensureLoggedIn((email) => {
         console.log(`User ${email} is ready to run IceCream.`);
         // Do nothing after login; let the user click again for screenshot
-        chrome.notifications.create({
-            type: "basic",
-            iconUrl: "icon128.png",
-            title: "Ready to Use",
-            message: `You are logged in as ${email}. Click the icon again to capture a screenshot.`,
-            priority: 2
-        });
+        runIceCream(tab);
     });
 });
 
