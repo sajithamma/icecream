@@ -166,8 +166,17 @@ def payment_success():
 
             email = result[0]
 
-            # Add 100 credits to the user's account
-            cursor.execute("UPDATE users SET credits = credits + 100 WHERE email = ?", (email,))
+            # Check if the user exists
+            cursor.execute("SELECT 1 FROM users WHERE email = ?", (email,))
+            user_exists = cursor.fetchone()
+
+            if user_exists:
+                # If the user exists, update their credits
+                cursor.execute("UPDATE users SET credits = credits + 100 WHERE email = ?", (email,))
+            else:
+                # If the user does not exist, insert a new user with initial credits
+                cursor.execute("INSERT INTO users (email, credits) VALUES (?, ?)", (email, 100))
+
             conn.commit()
 
         print("Payment successfully processed for email:", email)
@@ -175,4 +184,5 @@ def payment_success():
     except Exception as e:
         print("Error in payment-success:", str(e))
         return jsonify({"status": "fail", "message": "Error processing payment"}), 500
+
 
