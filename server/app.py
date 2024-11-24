@@ -5,6 +5,7 @@ from config import Config
 from handlers.openai_handler import OpenAIHandler
 from handlers.gemini_handler import GeminiHandler
 import requests
+from uuid import uuid4
 
 from db import init_db, get_or_create_user, log_activity, deduct_credit
 
@@ -72,9 +73,16 @@ def upload_image():
     if image_file.filename == '':
         return jsonify({"status": "fail", "message": "No selected file"}), 400
 
-    # Save the image with a secure filename
-    filename = secure_filename(image_file.filename)
-    image_path = os.path.join(UPLOAD_FOLDER, filename)
+    # Get or create the user
+    user_id, credits = get_or_create_user(email)
+
+    # Generate a unique filename using user_id and a random UUID
+    random_id = str(uuid4())
+    extension = os.path.splitext(image_file.filename)[1]  # Preserve original file extension
+    unique_filename = f"{user_id}_{random_id}{extension}"
+    image_path = os.path.join(UPLOAD_FOLDER, unique_filename)
+
+    # Save the image with the unique filename
     image_file.save(image_path)
 
     # Retrieve the question for the image or use a default question
@@ -82,9 +90,6 @@ def upload_image():
     image_question += " Note: Read the full text, also images, diagrams, charts etc, and use it wise to answer the question.  Get the result in proper spacing and proper punctuations."
 
     try:
-        # Get or create the user
-        user_id, credits = get_or_create_user(email)
-
         # Check if the user has enough credits
         if credits <= 0:
             return jsonify({"status": "fail", "message": "Insufficient credits"}), 403
@@ -101,13 +106,6 @@ def upload_image():
         print(response_text)
     except Exception as e:
         return jsonify({"status": "fail", "message": str(e)}), 500
-    finally:
-        # Remove the image after processing
-        if os.path.exists(image_path):
-            #os.remove(image_path)
-            pass
-        else:
-            print(f"Warning: File {image_path} not found when attempting to delete.")
 
     return jsonify({"status": "success", "message": response_text}), 200
 
