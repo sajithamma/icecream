@@ -8,3 +8,5 @@ class Config:
     DEFAULT_LLM = os.getenv("DEFAULT_LLM", "OPENAI")  # Default to OPENAI if not set
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+    RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
+    RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Credits</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+
+<body>
+    <h1>Buy Credits</h1>
+    <p>100 Credits - $8 (₹600)</p>
+    <form id="paymentForm">
+        <input type="email" name="email" placeholder="Enter your email" required>
+        <button type="button" onclick="initiatePayment()">Buy Now</button>
+    </form>
+
+    <script>
+        function initiatePayment() {
+            const form = document.getElementById("paymentForm");
+            const email = form.email.value;
+
+            fetch('/create-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const options = {
+                        key: "{{ razorpay_key_id }}",
+                        amount: data.amount,
+                        currency: data.currency,
+                        order_id: data.order_id,
+                        handler: function (response) {
+                            // Send payment info to the server
+                            fetch('/payment-success', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    order_id: response.razorpay_order_id,
+                                    payment_id: response.razorpay_payment_id,
+                                    signature: response.razorpay_signature
+                                })
+                            })
+                                .then(res => res.json())
+                                .then(res => alert(res.message))
+                                .catch(err => console.error(err));
+                        },
+                    };
+                    const rzp = new Razorpay(options);
+                    rzp.open();
+                })
+                .catch(err => console.error(err));
+        }
+    </script>
+</body>
+
+</html>
