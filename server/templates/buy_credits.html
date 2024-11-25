@@ -218,7 +218,6 @@
             })
                 .then(response => {
                     if (!response.ok) {
-                        // If server response status is not ok, throw an error with its status text
                         return response.json().then(err => { throw new Error(err.message || "Failed to create order."); });
                     }
                     return response.json();
@@ -253,26 +252,36 @@
                                     return res.json();
                                 })
                                 .then(res => {
-                                    alert(res.message);
-                                    // Redirect on successful payment
                                     if (res.status === "success") {
-                                        window.location.href = "/payment-success-page"; // Replace with your actual success page URL
+                                        window.location.href = "/payment-success-page"; // Redirect to success page
+                                    } else {
+                                        throw new Error(res.message || "Payment verification failed.");
                                     }
                                 })
-                                .catch(err => alert(err.message));
+                                .catch(err => {
+                                    alert(err.message);
+                                    window.location.href = "/payment-failed"; // Redirect to failed page
+                                });
+                        },
+                        theme: {
+                            color: "#3399cc" // Customization for Razorpay popup
                         }
                     };
 
                     const rzp = new Razorpay(options);
+                    rzp.on('payment.failed', function (response) {
+                        alert("Payment failed: " + response.error.description);
+                        window.location.href = "/payment-failed"; // Redirect to failed page
+                    });
                     rzp.open();
                 })
                 .catch(err => {
-                    // Handle errors from both frontend and server
                     console.error(err);
                     alert(err.message || "An unexpected error occurred. Please try again.");
                 });
         }
     </script>
+
 
 </body>
 
