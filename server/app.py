@@ -98,7 +98,7 @@ def upload_image():
     try:
         # Check if the user has enough credits
         if credits <= 0:
-            return jsonify({"status": "fail", "message": "Insufficient credits"}), 403
+            return jsonify({"status": "fail", "message": "Insufficient credits, buy more at www.icecream.vision"}), 403
 
         # Process the image using the chosen handler
         response_text = handler.process_image(image_path, image_question)
