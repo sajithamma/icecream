@@ -1,0 +1,138 @@
+/* Top-level class for rendered markdown content */
+.renderedMessageIceCream {
+    font-family: Arial, sans-serif !important;
+    line-height: 1.5 !important;
+    color: #333 !important;
+}
+
+/* Paragraphs */
+.renderedMessageIceCream p {
+    margin-bottom: 10px !important;
+    font-size: 14px !important;
+    color: #444 !important;
+}
+
+/* Headers */
+.renderedMessageIceCream h1,
+.renderedMessageIceCream h2,
+.renderedMessageIceCream h3 {
+    margin-bottom: 10px !important;
+    font-weight: bold !important;
+    color: #222 !important;
+    margin-top: 10px !important;
+}
+
+.renderedMessageIceCream h1 {
+    font-size: 24px !important;
+    border-bottom: 1px solid #ddd !important;
+    padding-bottom: 5px !important;
+}
+
+.renderedMessageIceCream h2 {
+    font-size: 20px !important;
+    border-bottom: 1px solid #eee !important;
+    padding-bottom: 5px !important;
+}
+
+.renderedMessageIceCream h3 {
+    font-size: 16px !important;
+}
+
+/* Lists */
+.renderedMessageIceCream ul,
+.renderedMessageIceCream ol {
+    padding-left: 20px !important;
+    margin-bottom: 10px !important;
+}
+
+/* Top-level unordered list items */
+.renderedMessageIceCream ul {
+    list-style: disc !important;
+    margin-left: 20px !important;
+    padding-left: 20px !important;
+}
+
+/* Nested unordered list items */
+.renderedMessageIceCream ul ul {
+    list-style: none !important;
+    margin-left: 20px !important;
+    padding-left: 20px !important;
+}
+
+.renderedMessageIceCream li {
+    font-size: 14px !important;
+    margin-bottom: 5px !important;
+    list-style: disc inside !important;
+}
+
+/* Links */
+.renderedMessageIceCream a {
+    color: #1a73e8 !important;
+    text-decoration: none !important;
+}
+
+.renderedMessageIceCream a:hover {
+    text-decoration: underline !important;
+}
+
+/* Blockquotes */
+.renderedMessageIceCream blockquote {
+    margin: 10px 0 !important;
+    padding: 10px 20px !important;
+    background: #f9f9f9 !important;
+    border-left: 4px solid #ccc !important;
+    color: #666 !important;
+    font-style: italic !important;
+}
+
+/* Code blocks */
+.renderedMessageIceCream pre {
+    background: #f4f4f4 !important;
+    border: 1px solid #ddd !important;
+    padding: 10px !important;
+    overflow-x: auto !important;
+    margin-bottom: 10px !important;
+}
+
+.renderedMessageIceCream code {
+    background: #f9f9f9 !important;
+    padding: 2px 4px !important;
+    border-radius: 3px !important;
+    font-size: 13px !important;
+    color: #d6336c !important;
+    font-family: "Courier New", Courier, monospace !important;
+}
+
+/* Horizontal rules */
+.renderedMessageIceCream hr {
+    border: 0 !important;
+    height: 1px !important;
+    background: #ddd !important;
+    margin: 20px 0 !important;
+}
+
+/* Tables */
+.renderedMessageIceCream table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    margin-bottom: 10px !important;
+}
+
+.renderedMessageIceCream th,
+.renderedMessageIceCream td {
+    border: 1px solid #ddd !important;
+    padding: 8px !important;
+    text-align: left !important;
+}
+
+.renderedMessageIceCream th {
+    background-color: #f4f4f4 !important;
+    font-weight: bold !important;
+}
+
+/* Images */
+.renderedMessageIceCream img {
+    max-width: 100% !important;
+    height: auto !important;
+    margin-bottom: 10px !important;
+}

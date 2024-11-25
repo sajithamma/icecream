@@ -475,7 +475,7 @@ function displayNotification(tabId, message, showProgress = false) {
             notification.style.position = "fixed";
             notification.style.bottom = "20px";
             notification.style.right = "20px";
-            notification.style.width = "420px";
+            notification.style.width = "500px";
             notification.style.maxHeight = "90vh";
 
             notification.style.backgroundColor = "#ffffff";
@@ -497,8 +497,8 @@ function displayNotification(tabId, message, showProgress = false) {
                         <span>IceCream</span>
                         <button id="close-notification" style="background: none; border: none; color: white; font-weight: bold; cursor: pointer; font-size: 1.2em; line-height: 1;">&times;</button>
                     </div>
-                    <div style="padding: 20px;">
-                        <div style="font-size: 12px; padding-left:5px">${renderedMessage}</div>
+                    <div style="padding: 20px; ">
+                        <div style="font-size:14px !important;padding-left:5px;line-height:18px !important" class="renderedMessageIceCream">${renderedMessage}</div>
                         ${showProgress ? '<div id="progress-bar" style="margin-top: 10px; height: 6px; background-color: #4CAF50; border-radius: 3px; width: 0;"></div>' : ''}
                     </div>
                 `;
