@@ -278,6 +278,78 @@ function addSelectionOverlay() {
     });
 }
 
+function showScannerAnimation(tabId) {
+    // Inject the scanner animation script into the active tab
+    chrome.scripting.executeScript({
+        target: { tabId: tabId },
+        func: () => {
+            if (document.getElementById("scanner-overlay")) {
+                console.warn("Scanner animation is already running.");
+                return;
+            }
+
+            // Create and style the overlay container
+            const scannerOverlay = document.createElement('div');
+            scannerOverlay.id = 'scanner-overlay';
+            scannerOverlay.style.position = 'fixed';
+            scannerOverlay.style.top = '0';
+            scannerOverlay.style.left = '0';
+            scannerOverlay.style.width = '100%';
+            scannerOverlay.style.height = '100%';
+            scannerOverlay.style.background = 'rgba(0, 0, 0, 0.05)';
+            scannerOverlay.style.pointerEvents = 'none';
+            scannerOverlay.style.zIndex = '9999';
+            document.body.appendChild(scannerOverlay);
+
+            // Create and style the vertical scanning bar
+            const scanningBar = document.createElement('div');
+            scanningBar.id = 'scanning-bar';
+            scanningBar.style.position = 'absolute';
+            scanningBar.style.top = '0';
+            scanningBar.style.left = '0';
+            scanningBar.style.width = '5%';
+            scanningBar.style.height = '100%';
+            scanningBar.style.background = 'linear-gradient(to bottom, transparent, yellow, transparent)';
+            scanningBar.style.boxShadow = '0 0 20px 5px white';
+            scanningBar.style.opacity = '0.6';
+            scannerOverlay.appendChild(scanningBar);
+
+            // Animation function
+            let direction = 1;
+            let position = 0;
+
+            function animateBar() {
+                if (!document.getElementById('scanner-overlay')) return; // Stop animation if overlay is removed
+                position += direction * 2; // Adjust speed
+                if (position >= window.innerWidth || position <= 0) {
+                    direction *= -1; // Reverse direction
+                }
+                scanningBar.style.transform = `translateX(${position}px)`;
+                requestAnimationFrame(animateBar);
+            }
+
+            animateBar();
+        }
+    });
+}
+
+function stopScannerAnimation(tabId) {
+    // Inject the stop animation script into the active tab
+    chrome.scripting.executeScript({
+        target: { tabId: tabId },
+        func: () => {
+            const scannerOverlay = document.getElementById("scanner-overlay");
+            if (scannerOverlay) {
+                scannerOverlay.remove();
+                console.log("Scanner animation stopped and overlay removed.");
+            } else {
+                console.warn("No scanner animation is running.");
+            }
+        }
+    });
+}
+
+
 // Crop and send the image as a temporary content script function
 function cropAndSendImage(base64Image, x, y, width, height) {
     const img = new Image();
@@ -325,6 +397,8 @@ function uploadImage(tabId, base64Image, question) {
             // Create form data with email and token
             const formData = createFormData(base64Image, question, email, token);
 
+            showScannerAnimation(tabId);
+
             // Make the API call
             fetch("https://icecream.vision/upload-image", {
                 method: "POST",
@@ -335,6 +409,7 @@ function uploadImage(tabId, base64Image, question) {
                     console.log("Upload response received:", data);
                     if (data.status === "success") {
                         console.log("File successfully uploaded:", data.message);
+                        stopScannerAnimation(tabId);
 
                         chrome.scripting.executeScript({
                             target: { tabId: tabId },
@@ -344,15 +419,18 @@ function uploadImage(tabId, base64Image, question) {
                         }).catch(error => {
                             console.error("Error loading marked.js:", error);
                             displayNotification(tabId, `Success: ${data.message}`);
+                            stopScannerAnimation(tabId);
                         });
                     } else {
                         console.error("Failed to upload file:", data.message);
                         displayNotification(tabId, `Error: ${data.message}`);
+                        stopScannerAnimation(tabId);
                     }
                 })
                 .catch(error => {
                     console.error("Upload error:", error);
                     displayNotification(tabId, "Error uploading screenshot.");
+                    stopScannerAnimation(tabId);
                 });
         });
     });
@@ -415,15 +493,15 @@ function displayNotification(tabId, message, showProgress = false) {
             }
 
             notification.innerHTML = `
-                <div style="background-color: #1a73e8; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; font-weight: bold;">
-                    <span>IceCream</span>
-                    <button id="close-notification" style="background: none; border: none; color: white; font-weight: bold; cursor: pointer; font-size: 1.2em; line-height: 1;">&times;</button>
-                </div>
-                <div style="padding: 20px;">
-                    <div style="font-size: 12px; padding-left:5px">${renderedMessage}</div>
-                    ${showProgress ? '<div id="progress-bar" style="margin-top: 10px; height: 6px; background-color: #4CAF50; border-radius: 3px; width: 0;"></div>' : ''}
-                </div>
-            `;
+                    <div style="background-color: #1a73e8; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; font-weight: bold;">
+                        <span>IceCream</span>
+                        <button id="close-notification" style="background: none; border: none; color: white; font-weight: bold; cursor: pointer; font-size: 1.2em; line-height: 1;">&times;</button>
+                    </div>
+                    <div style="padding: 20px;">
+                        <div style="font-size: 12px; padding-left:5px">${renderedMessage}</div>
+                        ${showProgress ? '<div id="progress-bar" style="margin-top: 10px; height: 6px; background-color: #4CAF50; border-radius: 3px; width: 0;"></div>' : ''}
+                    </div>
+                `;
 
             if (showProgress) {
                 let progressBar = notification.querySelector("#progress-bar");
