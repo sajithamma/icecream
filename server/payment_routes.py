@@ -186,3 +186,6 @@ def payment_success():
         return jsonify({"status": "fail", "message": "Error processing payment"}), 500
 
 
+@payment_routes.route('/payment-success-page', methods=['GET'])
+def payment_success_page():
+    return render_template("payment_success.html")

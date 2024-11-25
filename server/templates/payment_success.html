@@ -4,16 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buy Credits - IceCream</title>
+    <title>Payment Success - IceCream</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo/favicon.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/animate.css') }}">
 
     <style>
-        .bg-primary {
-            background-color: rgb(27, 144, 173);
-        }
-
         .navbar-logo img {
             width: 70px !important;
         }
@@ -24,59 +20,37 @@
             }
         }
 
-        .form-container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
-            padding: 30px;
+        .bg-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 30px auto;
             text-align: center;
             max-width: 500px;
-            margin: auto;
         }
 
-        .form-container h1 {
-            font-size: 2rem;
-            color: rgb(27, 144, 173);
-            font-weight: bold;
-        }
-
-        .form-container p {
-            font-size: 1.2rem;
-            color: #555;
-            margin-bottom: 20px;
-        }
-
-        .form-container input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .form-container button {
+        .btn-primary {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
             background-color: rgb(27, 144, 173);
             color: white;
-            border: none;
-            padding: 10px 20px;
+            text-decoration: none;
             border-radius: 5px;
-            cursor: pointer;
             transition: background 0.3s;
         }
 
-        .form-container button:hover {
+        .btn-primary:hover {
             background-color: rgb(22, 118, 141);
         }
     </style>
-
-    <script src="/static/js/wow.min.js"></script>
-    <script>
-        new WOW().init();
-    </script>
 </head>
 
 <body>
     <!-- Header Section -->
+    <!-- ====== Navbar Section Start -->
     <div class="ud-header absolute left-0 top-0 z-40 flex w-full items-center bg-transparent">
         <div class="container">
             <div class="relative -mx-4 flex items-center justify-between">
@@ -97,19 +71,19 @@
                             class="absolute right-4 top-full hidden w-full max-w-[250px] rounded-lg bg-white py-5 shadow-lg dark:bg-dark-2 lg:static lg:block lg:w-full lg:max-w-full lg:bg-transparent lg:px-4 lg:py-0 lg:shadow-none dark:lg:bg-transparent xl:px-6">
                             <ul class="blcok lg:flex 2xl:ml-20">
                                 <li class="group relative">
-                                    <a href="/"
+                                    <a href="#home"
                                         class="ud-menu-scroll mx-8 flex py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70">
                                         Home
                                     </a>
                                 </li>
                                 <li class="group relative">
-                                    <a href="/#features"
+                                    <a href="#features"
                                         class="ud-menu-scroll mx-8 flex py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10">
                                         Features
                                     </a>
                                 </li>
                                 <li class="group relative">
-                                    <a href="/#pricing"
+                                    <a href="#pricing"
                                         class="ud-menu-scroll mx-8 flex py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10">
                                         Pricing
                                     </a>
@@ -135,24 +109,21 @@
         </div>
     </div>
 
-    <!-- Buy Credits Section -->
+    <!-- Success Message Section -->
     <div id="home"
         class="relative overflow-hidden bg-primary pt-[120px] md:pt-[130px] lg:pt-[160px] mb-[20px] md:mb-[30px] lg:mb-[40px]">
         <div class="container">
             <div class="bg-primary py-20">
-                <div class="form-container">
-                    <h1>Buy Credits</h1>
-                    <p>100 Credits (₹10)</p>
-                    <form id="paymentForm">
-                        <input type="email" name="email" placeholder="Enter your email" required>
-                        <button type="button" onclick="initiatePayment()">Buy Now</button>
-                    </form>
+                <div class="bg-success">
+                    <h1>🎉 Payment Successful!</h1>
+                    <p>Thank you for your payment. Your credits have been added to your account.</p>
+                    <a href="/" class="btn-primary">Back to Home</a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ====== Footer Section Start -->
+    <!-- Footer Section -->
     <footer class="wow fadeInUp relative z-10 bg-[#090E34] pt-20 lg:pt-[100px]" data-wow-delay=".15s">
         <div class="container" style="display: none;">
             <div class="-mx-4 flex flex-wrap">
@@ -357,89 +328,6 @@
 
 
     </footer>
-
-    <!-- Razorpay Script -->
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script>
-        function initiatePayment() {
-            const form = document.getElementById("paymentForm");
-            const email = form.email.value;
-
-            // Email validation
-            if (!email) {
-                alert("Email is required.");
-                return;
-            }
-
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                alert("Please enter a valid email address.");
-                return;
-            }
-
-            fetch('/create-order', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: email })
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        // If server response status is not ok, throw an error with its status text
-                        return response.json().then(err => { throw new Error(err.message || "Failed to create order."); });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Validate the server response structure
-                    if (!data || !data.order_id || !data.amount || !data.currency) {
-                        throw new Error("Invalid response from server. Please try again.");
-                    }
-
-                    // Razorpay options
-                    const options = {
-                        key: "{{ razorpay_key_id }}",
-                        amount: data.amount,
-                        currency: data.currency,
-                        order_id: data.order_id,
-                        handler: function (response) {
-                            // Handle successful payment
-                            fetch('/payment-success', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    order_id: response.razorpay_order_id,
-                                    payment_id: response.razorpay_payment_id,
-                                    signature: response.razorpay_signature
-                                })
-                            })
-                                .then(res => {
-                                    if (!res.ok) {
-                                        return res.json().then(err => { throw new Error(err.message || "Payment verification failed."); });
-                                    }
-                                    return res.json();
-                                })
-                                .then(res => {
-                                    alert(res.message);
-                                    // Redirect on successful payment
-                                    if (res.status === "success") {
-                                        window.location.href = "/payment-success-page"; // Replace with your actual success page URL
-                                    }
-                                })
-                                .catch(err => alert(err.message));
-                        }
-                    };
-
-                    const rzp = new Razorpay(options);
-                    rzp.open();
-                })
-                .catch(err => {
-                    // Handle errors from both frontend and server
-                    console.error(err);
-                    alert(err.message || "An unexpected error occurred. Please try again.");
-                });
-        }
-    </script>
-
 </body>
 
 </html>
