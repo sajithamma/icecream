@@ -189,3 +189,7 @@ def payment_success():
 @payment_routes.route('/payment-success-page', methods=['GET'])
 def payment_success_page():
     return render_template("payment_success.html")
+
+@payment_routes.route('/payment-failed', methods=['GET'])
+def payment_failed():
+    return render_template("payment_failed.html")
