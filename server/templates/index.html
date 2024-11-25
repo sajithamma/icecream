@@ -18,48 +18,18 @@
             background-color: rgb(27, 144, 173) !important;
 
         }
-    </style>
 
-    <style>
-        .fullscreen-video-wrap {
-            overflow: hidden;
-            position: fixed;
+        .navbar-logo img {
+            width: 70px !important;
         }
 
-        .object-fit__container {
-
-            overflow: hidden;
-            height: 100vh;
-            width: 100%;
-            background: black;
-        }
-
-        .fullscreen-video-wrap video {
-            height: 102vh;
-            width: 100%;
-            object-fit: cover;
-            z-index: 0;
-            object-position: 80%;
-        }
-
-        .backgroundvid {
-            background-image: url('/static/bg.jpg');
-            background-size: cover;
-        }
-
-        video {
-            object-fit: contain;
-            overflow-clip-margin: content-box;
-            overflow: clip;
-            filter: brightness(0.4);
-        }
-
-        @media (min-width: 768px) {
-            .fullscreen-video-wrap video {
-                object-position: 50%;
+        @media only screen and (max-width: 768px) {
+            .navbar-logo img {
+                width: 45px !important;
             }
         }
     </style>
+
 
     <!-- ==== WOW JS ==== -->
     <script src="/static/js/wow.min.js"></script>
@@ -75,8 +45,7 @@
             <div class="relative -mx-4 flex items-center justify-between">
                 <div class="w-60 max-w-full px-4">
                     <a href="index.html" class="navbar-logo block w-full py-5">
-                        <img src="/static/images/logo/logo.png" alt="logo" class="header-logo w-full"
-                            style="width: 70px;" />
+                        <img src="/static/images/logo/logo.png" alt="logo" class="header-logo w-full" />
                     </a>
                 </div>
                 <div class="flex w-full items-center justify-between px-4">
@@ -114,11 +83,11 @@
                     </div>
                     <div class="flex items-center justify-end pr-16 lg:pr-0">
                         <div class="hidden sm:flex">
-                            <a href="signin.html"
+                            <a href="https://www.youtube.com"
                                 class="loginBtn px-[22px] py-2 text-base font-medium text-white hover:opacity-70">
                                 Watch Video
                             </a>
-                            <a href="signup.html"
+                            <a href="https://chromewebstore.google.com/detail/icecream/gkngkecaijfnpadgeepjapabhkpikhdll"
                                 class="signUpBtn rounded-md bg-white bg-opacity-20 px-6 py-2 text-base font-medium text-white duration-300 ease-in-out hover:bg-opacity-100 hover:text-dark">
                                 ⚡ Install Now
                             </a>
@@ -148,7 +117,7 @@
                             A chrome plugin with AI Vision to explains everything you see.
                         </p>
 
-                        <div style="color: white !important; margin-bottom: 35px; font-size: small;">
+                        <div style="color: white !important; margin-bottom: 40px; font-size: small;">
                             <span>Eg: <strong>Answer</strong> all the questions on the
                                 screen.</span>
                             <br /> <span>Eg: Draft a marketing campaign for this
@@ -845,7 +814,7 @@
                     <div class="w-full px-4 md:w-1/3 lg:w-1/2">
                         <div class="my-1 flex justify-center md:justify-end">
                             <p class="text-base text-gray-7">
-                                Copyright &copy; 2024, All Rights Reserved.
+                                Copyright &copy; 2024/25, All Rights Reserved.
 
                             </p>
                         </div>

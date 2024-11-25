@@ -326,7 +326,7 @@ function uploadImage(tabId, base64Image, question) {
             const formData = createFormData(base64Image, question, email, token);
 
             // Make the API call
-            fetch("https://icecream.capy.in/upload-image", {
+            fetch("https://icecream.vision/upload-image", {
                 method: "POST",
                 body: formData,
             })
