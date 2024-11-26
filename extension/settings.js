@@ -13,18 +13,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const authSection = document.getElementById("authSection"); // Placeholder for login/logout buttons
 
     // Load saved settings
-    chrome.storage.local.get(["defaultQuestion", "captureMode", "selectedPreset", "userEmail"], (result) => {
-        // Handle default instructions
-        if (result.defaultQuestion) {
-            instructionsTextarea.value = result.defaultQuestion;
-        }
-        if (result.captureMode) {
-            document.querySelector(`input[name="captureMode"][value="${result.captureMode}"]`).checked = true;
-        }
-        if (result.selectedPreset) {
-            presetInstructions.value = result.selectedPreset;
-            instructionsTextarea.value = instructionsMap[result.selectedPreset];
-        }
+    chrome.storage.local.get(["defaultQuestion", "captureMode", "selectedPreset", "customMessage", "userEmail"], (result) => {
+        // Set default preset to "basic" if not already set
+        const selectedPreset = result.selectedPreset || "basic";
+        presetInstructions.value = selectedPreset;
+        instructionsTextarea.value = selectedPreset === "custom" ? result.customMessage || "" : instructionsMap[selectedPreset];
+        instructionsTextarea.disabled = selectedPreset !== "custom"; // Disable textarea unless custom
+
+        // Set capture mode if available, default to "viewport"
+        const captureMode = result.captureMode || "viewport";
+        document.querySelector(`input[name="captureMode"][value="${captureMode}"]`).checked = true;
 
         // Display appropriate auth button
         if (result.userEmail) {
@@ -42,8 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
                 }
             });
-        }
-        else {
+        } else {
             authSection.innerHTML = `
                 <p style="color: red; font-size: 14px;">Not logged in. Please log in to use the plugin.</p>
                 <button id="loginButton" style="background-color: #1a73e8; color: white; margin-top: 15px;">Login</button>
@@ -87,6 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     presetInstructions.addEventListener("change", () => {
         const selectedValue = presetInstructions.value;
         instructionsTextarea.value = instructionsMap[selectedValue];
+        instructionsTextarea.disabled = selectedValue !== "custom"; // Disable textarea unless custom
     });
 
     // Save settings
@@ -95,11 +93,25 @@ document.addEventListener("DOMContentLoaded", () => {
         const captureMode = document.querySelector('input[name="captureMode"]:checked').value;
         const selectedPreset = presetInstructions.value;
 
-        chrome.storage.local.set({
+        // Check if text area is empty for custom preset
+        if (selectedPreset === "custom" && !question.trim()) {
+            alert("Content must not be empty when using the custom preset.");
+            return;
+        }
+
+        // Save settings in local storage
+        const storageData = {
             defaultQuestion: question,
             captureMode: captureMode,
             selectedPreset: selectedPreset
-        }, () => {
+        };
+
+        // Save custom message if preset is custom
+        if (selectedPreset === "custom") {
+            storageData.customMessage = question;
+        }
+
+        chrome.storage.local.set(storageData, () => {
             alert("Settings saved!");
         });
     });

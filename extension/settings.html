@@ -82,6 +82,18 @@
             resize: vertical;
         }
 
+        textarea:disabled {
+            background-color: #f0f0f0;
+            /* Light grey background */
+            color: #999;
+            /* Grey text color */
+            cursor: not-allowed;
+            /* Change cursor to indicate non-editable */
+            border: 1px solid #ccc;
+            /* Optional: Subtle border to match the style */
+        }
+
+
         .divider {
             height: 1px;
             background-color: #e0e0e0;
@@ -243,7 +255,7 @@
         </div>
 
         <div class="setting-group">
-            <label for="instructions">Your instructions:</label>
+            <label for="instructions" id="instructionsLabel">Your instructions:</label>
             <textarea id="instructions" placeholder="Provide specific instructions here..."></textarea>
         </div>
 
