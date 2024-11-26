@@ -495,13 +495,15 @@ function displayNotification(tabId, message, showProgress = false) {
                     renderedMessage = marked.parse(message);
                 }
 
+                const trimmedPrompt = currentPrompt.length > 75 ? currentPrompt.substring(0, 75) + "..." : currentPrompt;
+
                 notification.innerHTML = `
                     <div style="background-color: #1a73e8; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; font-weight: bold;">
-                        <span>IceCream</span>
+                        <span style="font-size:17px">IceCream</span>
                         <button id="close-notification" style="background: none; border: none; color: white; font-weight: bold; cursor: pointer; font-size: 1.2em; line-height: 1;">&times;</button>
                     </div>
                     <div class="iceCreamNotificationPrompt" >
-                        <span ><span class="icreamtPrompt">Prompt:</span> ${currentPrompt}</span>
+                        <span ><span class="icreamtPrompt">Prompt:</span> ${trimmedPrompt}</span>
                         <a href="#" id="edit-prompt-link" >Change</a>
                     </div>
                     <div style="padding: 20px;">

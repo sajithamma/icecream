@@ -47,7 +47,7 @@
 
 /* Top-level unordered list items */
 .renderedMessageIceCream ul {
-    list-style: disc !important;
+
     margin-left: 20px !important;
     padding-left: 20px !important;
 }
@@ -138,8 +138,8 @@
 }
 
 .iceCreamNotificationPrompt {
-    background-color: rgb(67, 80, 93);
-    color: white;
+    background-color: #e9e9e9;
+    color: #333;
     padding: 10px 15px;
     display: flex;
     align-items: center;
@@ -155,8 +155,10 @@
 .iceCreamNotificationPrompt a {
     font-size: 10px;
     font-weight: normal;
+    color: #0969b6;
+    text-decoration: underline;
 }
 
 .iceCreamNotificationPrompt .icreamtPrompt {
-    color: yellowgreen;
+    color: #ea2e80;
 }
