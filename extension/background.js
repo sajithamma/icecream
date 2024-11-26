@@ -478,7 +478,7 @@ function displayNotification(tabId, message, showProgress = false) {
 
                 notification.style.position = "fixed";
                 notification.style.bottom = "20px";
-                notification.style.right = "20px";
+                notification.style.right = "2px";
                 notification.style.width = "500px";
                 notification.style.maxHeight = "90vh";
 
