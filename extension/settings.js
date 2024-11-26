@@ -3,12 +3,12 @@ document.addEventListener("DOMContentLoaded", () => {
         basic: "Analyse the full page of the website and get me information on what it says.",
         quiz: "Please read each question carefully and provide the most accurate answer. For multiple-choice questions, identify the correct choice. If choices aren’t numbered (e.g., 1, 2, 3 or A, B, C), assign numbers to each option from left to right, and indicate the answer by referencing the option number. For written responses, provide a clear and concise answer to input. In cases where there are multiple questions, answer each one in sequence, labeling them by question number or a unique portion of the question text. If a question appears incomplete or cut off, disregard it and answer only those that are fully visible. Additionally, some questions may contain images; examine these closely and respond accurately based on what is displayed.",
         linkedin: "Read the profile and draft a marketing message I can send.",
-        custom: "" // Custom leaves the text area empty
+        custom: "" // Custom leaves the text area empty initially
     };
 
     const presetInstructions = document.getElementById("presetInstructions");
     const instructionsTextarea = document.getElementById("instructions");
-    const instructionsLabel = document.getElementById("instructionsLabel"); // Add an ID to the label
+    const instructionsLabel = document.getElementById("instructionsLabel");
     const saveButton = document.getElementById("saveButton");
     const authSection = document.getElementById("authSection");
 
@@ -17,11 +17,24 @@ document.addEventListener("DOMContentLoaded", () => {
         instructionsLabel.textContent = labelText;
     };
 
+    const loadCustomMessage = (callback) => {
+        chrome.storage.local.get("customMessage", (result) => {
+            callback(result.customMessage || "");
+        });
+    };
+
     chrome.storage.local.get(["defaultQuestion", "captureMode", "selectedPreset", "customMessage", "userEmail"], (result) => {
         const selectedPreset = result.selectedPreset || "basic";
         presetInstructions.value = selectedPreset;
-        instructionsTextarea.value = selectedPreset === "custom" ? result.customMessage || "" : instructionsMap[selectedPreset];
-        instructionsTextarea.disabled = selectedPreset !== "custom";
+
+        if (selectedPreset === "custom") {
+            instructionsTextarea.disabled = false;
+            instructionsTextarea.value = result.customMessage || "";
+        } else {
+            instructionsTextarea.disabled = true;
+            instructionsTextarea.value = instructionsMap[selectedPreset];
+        }
+
         updateLabel(selectedPreset);
 
         const captureMode = result.captureMode || "viewport";
@@ -80,7 +93,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     presetInstructions.addEventListener("change", () => {
         const selectedValue = presetInstructions.value;
-        instructionsTextarea.value = instructionsMap[selectedValue];
+
+        if (selectedValue === "custom") {
+            loadCustomMessage((customMessage) => {
+                instructionsTextarea.value = customMessage;
+            });
+        } else {
+            instructionsTextarea.value = instructionsMap[selectedValue];
+        }
+
         instructionsTextarea.disabled = selectedValue !== "custom";
         updateLabel(selectedValue);
     });
