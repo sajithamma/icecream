@@ -30,11 +30,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (result.userEmail) {
             authSection.innerHTML = `
                 <p style="color: green; font-size: 14px;">Logged in as ${result.userEmail}</p>
-                <button id="logoutButton" style="background-color: #f44336; color: white; margin-top: 15px;">Logout</button>
+                <a id="logoutText" style="color: #0078d7; font-size: 14px; cursor: pointer; text-decoration: none; font-weight: bold;">Logout</a>
             `;
 
-            // Attach logout button event listener
-            document.getElementById("logoutButton").addEventListener("click", () => {
+            // Attach logout text link event listener
+            document.getElementById("logoutText").addEventListener("click", () => {
                 if (confirm("Are you sure you want to log out?")) {
                     chrome.storage.local.remove("userEmail", () => {
                         alert("You have been logged out. Please log in again to use the plugin.");
@@ -42,7 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
                 }
             });
-        } else {
+        }
+        else {
             authSection.innerHTML = `
                 <p style="color: red; font-size: 14px;">Not logged in. Please log in to use the plugin.</p>
                 <button id="loginButton" style="background-color: #1a73e8; color: white; margin-top: 15px;">Login</button>
