@@ -459,62 +459,77 @@ function createFormData(base64Image, question, email, token) {
     return formData;
 }
 
-// Function to show a notification in the tab with optional Markdown rendering and progress bar
+// Function to show a notification in the tab with a prompt bar and optional progress
 function displayNotification(tabId, message, showProgress = false) {
-    chrome.scripting.executeScript({
-        target: { tabId: tabId },
-        func: (message, showProgress) => {
-            console.log("Displaying notification...");
-            let notification = document.getElementById("extension-notification");
-            if (!notification) {
-                notification = document.createElement("div");
-                notification.id = "extension-notification";
-                document.body.appendChild(notification);
-            }
+    chrome.storage.local.get("defaultQuestion", (result) => {
+        const currentPrompt = result.defaultQuestion || "No prompt set. Click to edit.";
 
-            notification.style.position = "fixed";
-            notification.style.bottom = "20px";
-            notification.style.right = "20px";
-            notification.style.width = "500px";
-            notification.style.maxHeight = "90vh";
+        chrome.scripting.executeScript({
+            target: { tabId: tabId },
+            func: (message, showProgress, currentPrompt) => {
+                console.log("Displaying notification with prompt bar...");
+                let notification = document.getElementById("extension-notification");
+                if (!notification) {
+                    notification = document.createElement("div");
+                    notification.id = "extension-notification";
+                    document.body.appendChild(notification);
+                }
 
-            notification.style.backgroundColor = "#ffffff";
-            notification.style.color = "#000000";
-            notification.style.borderRadius = "10px";
-            notification.style.boxShadow = "0px 8px 16px rgba(0, 0, 0, 0.1)";
-            notification.style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
-            notification.style.zIndex = "9999";
-            notification.style.lineHeight = "1.2";
-            notification.style.overflow = "auto";
+                notification.style.position = "fixed";
+                notification.style.bottom = "20px";
+                notification.style.right = "20px";
+                notification.style.width = "500px";
+                notification.style.maxHeight = "90vh";
 
-            let renderedMessage = message;
-            if (typeof marked !== "undefined") {
-                renderedMessage = marked.parse(message);
-            }
+                notification.style.backgroundColor = "#ffffff";
+                notification.style.color = "#000000";
+                notification.style.borderRadius = "10px";
+                notification.style.boxShadow = "0px 8px 16px rgba(0, 0, 0, 0.1)";
+                notification.style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+                notification.style.zIndex = "9999";
+                notification.style.lineHeight = "1.2";
+                notification.style.overflow = "auto";
 
-            notification.innerHTML = `
+                let renderedMessage = message;
+                if (typeof marked !== "undefined") {
+                    renderedMessage = marked.parse(message);
+                }
+
+                notification.innerHTML = `
                     <div style="background-color: #1a73e8; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; font-weight: bold;">
                         <span>IceCream</span>
                         <button id="close-notification" style="background: none; border: none; color: white; font-weight: bold; cursor: pointer; font-size: 1.2em; line-height: 1;">&times;</button>
                     </div>
-                    <div style="padding: 20px; ">
-                        <div style="font-size:14px !important;padding-left:5px;line-height:18px !important" class="renderedMessageIceCream">${renderedMessage}</div>
+                    <div class="iceCreamNotificationPrompt" >
+                        <span ><span class="icreamtPrompt">Prompt:</span> ${currentPrompt}</span>
+                        <a href="#" id="edit-prompt-link" >Change</a>
+                    </div>
+                    <div style="padding: 20px;">
+                        <div style="font-size: 14px !important; padding-left: 5px; line-height: 18px !important" class="renderedMessageIceCream">${renderedMessage}</div>
                         ${showProgress ? '<div id="progress-bar" style="margin-top: 10px; height: 6px; background-color: #4CAF50; border-radius: 3px; width: 0;"></div>' : ''}
                     </div>
                 `;
 
-            if (showProgress) {
-                let progressBar = notification.querySelector("#progress-bar");
-                let width = 0;
-                const interval = setInterval(() => {
-                    width += 10;
-                    progressBar.style.width = width + "%";
-                    if (width >= 100) clearInterval(interval);
-                }, 300);
-            }
+                if (showProgress) {
+                    let progressBar = notification.querySelector("#progress-bar");
+                    let width = 0;
+                    const interval = setInterval(() => {
+                        width += 10;
+                        progressBar.style.width = width + "%";
+                        if (width >= 100) clearInterval(interval);
+                    }, 300);
+                }
 
-            notification.querySelector("#close-notification").onclick = () => notification.remove();
-        },
-        args: [message, showProgress]
+                // Close button functionality
+                notification.querySelector("#close-notification").onclick = () => notification.remove();
+
+                // Edit link functionality
+                notification.querySelector("#edit-prompt-link").onclick = () => {
+                    chrome.runtime.openOptionsPage();
+                };
+            },
+            args: [message, showProgress, currentPrompt]
+        });
     });
 }
+

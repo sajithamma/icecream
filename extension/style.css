@@ -136,3 +136,27 @@
     height: auto !important;
     margin-bottom: 10px !important;
 }
+
+.iceCreamNotificationPrompt {
+    background-color: rgb(67, 80, 93);
+    color: white;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 10px;
+}
+
+.iceCreamNotificationPrompt span {
+    font-size: 10px;
+    font-weight: normal;
+}
+
+.iceCreamNotificationPrompt a {
+    font-size: 10px;
+    font-weight: normal;
+}
+
+.iceCreamNotificationPrompt .icreamtPrompt {
+    color: yellowgreen;
+}
