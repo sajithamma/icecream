@@ -133,8 +133,13 @@ function runIceCream(tab) {
             displayNotification(tab.id, "Capturing data and analysing...", true);
             captureFullViewport(tab.id, question);
         } else if (captureMode === "selection") {
+            displayNotification(tab.id, "Capturing data and analysing...", true);
             console.log("Starting selection overlay for area capture...");
             captureSelectedArea(tab.id, question);
+        } else if (captureMode === "fullPage") {  // New mode for full-page capture
+            displayNotification(tab.id, "Capturing data and analysing...", true);
+            console.log("Starting full-page capture...");
+            captureFullPage(tab.id, question);
         }
     });
 }
@@ -211,6 +216,58 @@ function captureSelectedArea(tabId, question) {
 
     });
 }
+
+function captureFullPage(tabId, question) {
+    chrome.tabs.sendMessage(tabId, { action: "getPageDetails" }, (pageDetails) => {
+        if (!pageDetails || chrome.runtime.lastError) {
+            console.error("Error fetching page details:", chrome.runtime.lastError);
+            displayNotification(tabId, "Failed to capture the full page.");
+            return;
+        }
+
+        const { totalHeight, viewportHeight } = pageDetails;
+        console.log(`Total Height: ${totalHeight}, Viewport Height: ${viewportHeight}`);
+
+        let currentScrollY = 0;
+        const screenshots = [];
+
+        function captureNext() {
+            console.log(`Capturing at Y: ${currentScrollY}`);
+
+            chrome.tabs.captureVisibleTab(null, { format: "png" }, (image) => {
+                if (chrome.runtime.lastError || !image) {
+                    console.error("Error capturing screenshot:", chrome.runtime.lastError);
+                    displayNotification(tabId, "Error capturing screenshot.");
+                    return;
+                }
+
+                console.log("Screenshot captured. Storing the image...");
+                screenshots.push(image);
+
+                currentScrollY += viewportHeight;
+
+                if (currentScrollY < totalHeight) {
+                    console.log(`Scrolling to Y: ${currentScrollY}`);
+                    chrome.tabs.sendMessage(
+                        tabId,
+                        { action: "scrollTo", scrollY: currentScrollY },
+                        () => {
+                            // Wait for the scroll to complete
+                            setTimeout(captureNext, 500); // Add a 500ms delay
+                        }
+                    );
+                } else {
+                    console.log("All screenshots captured. Stitching...");
+                    stitchScreenshots(screenshots, tabId, question);
+                }
+            });
+        }
+
+
+        captureNext();
+    });
+}
+
 
 // Enhanced function to clear any previous selection overlays
 function clearSelectionOverlay() {
@@ -544,5 +601,57 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         chrome.tabs.create({ 'url': chrome.runtime.getURL("settings.html") });
     }
 });
+
+
+function stitchScreenshots(screenshots, tabId, question) {
+    chrome.scripting.executeScript({
+        target: { tabId },
+        func: (images) => {
+            return new Promise((resolve) => {
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+
+                const loadedImages = images.map((src) => {
+                    return new Promise((imgResolve) => {
+                        const img = new Image();
+                        img.onload = () => imgResolve(img);
+                        img.onerror = () => imgResolve(null); // Handle broken images gracefully
+                        img.src = src;
+                    });
+                });
+
+                Promise.all(loadedImages).then((imgElements) => {
+                    // Remove null entries in case of broken images
+                    const validImages = imgElements.filter((img) => img !== null);
+
+                    // Calculate canvas size
+                    canvas.width = validImages[0].width;
+                    canvas.height = validImages.reduce((sum, img) => sum + img.height, 0);
+
+                    // Draw each image on the canvas
+                    let offsetY = 0;
+                    validImages.forEach((img) => {
+                        ctx.drawImage(img, 0, offsetY);
+                        offsetY += img.height;
+                    });
+
+                    // Return Base64 image
+                    resolve(canvas.toDataURL("image/png"));
+                });
+            });
+        },
+        args: [screenshots],
+    })
+        .then((results) => {
+            const base64Image = results[0].result;
+            console.log("Generated Base64 Image:", base64Image.slice(0, 100)); // Log the first 100 chars for validation
+            uploadImage(tabId, base64Image, question);
+        })
+        .catch((error) => {
+            console.error("Error stitching screenshots:", error);
+            displayNotification(tabId, "Error stitching full page screenshot.");
+        });
+}
+
 
 
