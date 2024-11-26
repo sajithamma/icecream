@@ -521,13 +521,28 @@ function displayNotification(tabId, message, showProgress = false) {
                     }, 300);
                 }
 
+                notification.querySelector("#close-notification").onclick = () => {
+                    notification.remove();
+                };
                 // Close button functionality
-                notification.querySelector("#close-notification").onclick = () => notification.remove();
+                notification.querySelector("#edit-prompt-link").onclick = () => {
+                    chrome.runtime.sendMessage({ action: "openOptionsPage" });
+                };
+
 
             },
             args: [message, showProgress, trimmedPrompt],
         });
     });
 }
+
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    console.log("Received message in background script:", message);
+    if (message.action === "openOptionsPage") {
+        console.log("Opening options page...");
+        chrome.tabs.create({ 'url': chrome.runtime.getURL("settings.html") });
+    }
+});
 
 
