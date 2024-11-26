@@ -178,11 +178,13 @@ function captureSelectedArea(tabId, question) {
         console.log("Selection overlay injected.");
     });
 
-    // Listener for area coordinates from content script
+    // Combined Listener for Messages from Content Script
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        console.log("Received message in background script:", request);
+
+        // Handle "captureArea" action
         if (request.action === "captureArea" && request.x != null && request.y != null) {
             console.log("Area selected. Capturing full viewport and cropping to selection...");
-
             displayNotification(sender.tab.id, "Capturing data and analysing...", true);
 
             chrome.tabs.captureVisibleTab(null, { format: "png" }, (image) => {
@@ -200,14 +202,13 @@ function captureSelectedArea(tabId, question) {
                 }
             });
         }
-    });
 
-    // Listener for cropped image data from content script
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        // Handle "croppedImage" action
         if (request.action === "croppedImage" && request.imageData) {
             console.log("Cropped image received. Preparing for upload...");
-            uploadImage(sender.tab.id, request.imageData, question);
+            uploadImage(sender.tab.id, request.imageData, request.question);
         }
+
     });
 }
 
@@ -459,14 +460,14 @@ function createFormData(base64Image, question, email, token) {
     return formData;
 }
 
-// Function to show a notification in the tab with a prompt bar and optional progress
 function displayNotification(tabId, message, showProgress = false) {
     chrome.storage.local.get("defaultQuestion", (result) => {
         const currentPrompt = result.defaultQuestion || "No prompt set. Click to edit.";
+        const trimmedPrompt = currentPrompt.length > 75 ? currentPrompt.substring(0, 75) + "..." : currentPrompt;
 
         chrome.scripting.executeScript({
             target: { tabId: tabId },
-            func: (message, showProgress, currentPrompt) => {
+            func: (message, showProgress, trimmedPrompt) => {
                 console.log("Displaying notification with prompt bar...");
                 let notification = document.getElementById("extension-notification");
                 if (!notification) {
@@ -495,8 +496,6 @@ function displayNotification(tabId, message, showProgress = false) {
                     renderedMessage = marked.parse(message);
                 }
 
-                const trimmedPrompt = currentPrompt.length > 75 ? currentPrompt.substring(0, 75) + "..." : currentPrompt;
-
                 notification.innerHTML = `
                     <div style="background-color: #1a73e8; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; font-weight: bold;">
                         <span style="font-size:17px">IceCream</span>
@@ -504,7 +503,7 @@ function displayNotification(tabId, message, showProgress = false) {
                     </div>
                     <div class="iceCreamNotificationPrompt" >
                         <span ><span class="icreamtPrompt">Prompt:</span> ${trimmedPrompt}</span>
-                        <a href="#" id="edit-prompt-link" >Change</a>
+                        <a href="#" id="edit-prompt-link">Change</a>
                     </div>
                     <div style="padding: 20px;">
                         <div style="font-size: 14px !important; padding-left: 5px; line-height: 18px !important" class="renderedMessageIceCream">${renderedMessage}</div>
@@ -525,13 +524,10 @@ function displayNotification(tabId, message, showProgress = false) {
                 // Close button functionality
                 notification.querySelector("#close-notification").onclick = () => notification.remove();
 
-                // Edit link functionality
-                notification.querySelector("#edit-prompt-link").onclick = () => {
-                    chrome.runtime.openOptionsPage();
-                };
             },
-            args: [message, showProgress, currentPrompt]
+            args: [message, showProgress, trimmedPrompt],
         });
     });
 }
+
 

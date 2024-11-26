@@ -62,7 +62,7 @@
 .renderedMessageIceCream li {
     font-size: 14px !important;
     margin-bottom: 5px !important;
-    list-style: disc inside !important;
+    list-style: none !important;
 }
 
 /* Links */
