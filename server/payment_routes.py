@@ -62,8 +62,8 @@ def create_order():
     transaction_id = str(uuid4())
 
     # Define amount and currency
-    amount = 10  # Amount in smallest currency unit (₹8.00 = 800 paisa)
-    currency = "INR"
+    amount = 8  # Amount in smallest currency unit (₹8.00 = 800 paisa)
+    currency = "USD"
 
     # Log the payment in the database with PENDING status
     try:
