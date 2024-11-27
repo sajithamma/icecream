@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "IceCream",
-    "version": "1.1",
+    "version": "1.2",
     "description": "IceCream, explain everything from the screenshot",
     "permissions": [
         "activeTab",
