@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const selectedPreset = presetInstructions.value;
 
         if (selectedPreset === "custom" && !question.trim()) {
-            alert("Content must not be empty when using the custom preset.");
+            showNotification("Content must not be empty when using the custom preset.", "error");
             return;
         }
 
@@ -127,7 +127,32 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         chrome.storage.local.set(storageData, () => {
-            alert("Settings saved!");
+            showNotification("Settings saved successfully!");
         });
     });
+
+
+    function showNotification(message, type = "success") {
+        const notificationBar = document.getElementById("notificationBar");
+        notificationBar.textContent = message;
+
+        // Adjust background color based on the type of message
+        notificationBar.style.backgroundColor = type === "success" ? "#4CAF50" : "#f44336"; // Green for success, Red for error
+
+        // Show the notification
+        notificationBar.style.display = "block";
+
+        // Automatically hide the notification after 3 seconds
+        setTimeout(() => {
+            notificationBar.style.opacity = "1";
+            notificationBar.style.transition = "opacity 0.5s ease";
+            notificationBar.style.opacity = "0";
+            setTimeout(() => {
+                notificationBar.style.display = "none";
+                notificationBar.style.opacity = "1"; // Reset opacity for next use
+            }, 500); // Match the fade-out duration
+        }, 3000); // Show for 3 seconds
+    }
+
+
 });
