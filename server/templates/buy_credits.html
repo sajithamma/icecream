@@ -198,16 +198,25 @@
         function initiatePayment() {
             const form = document.getElementById("paymentForm");
             const email = form.email.value;
+            const buyButton = form.querySelector("button");
+
+            // Disable the button and change its text to "Please wait..."
+            buyButton.disabled = true;
+            buyButton.textContent = "Please wait...";
 
             // Email validation
             if (!email) {
                 alert("Email is required.");
+                buyButton.disabled = false;
+                buyButton.textContent = "Buy Now"; // Reset button state
                 return;
             }
 
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 alert("Please enter a valid email address.");
+                buyButton.disabled = false;
+                buyButton.textContent = "Buy Now"; // Reset button state
                 return;
             }
 
@@ -223,19 +232,16 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Validate the server response structure
                     if (!data || !data.order_id || !data.amount || !data.currency) {
                         throw new Error("Invalid response from server. Please try again.");
                     }
 
-                    // Razorpay options
                     const options = {
                         key: "{{ razorpay_key_id }}",
                         amount: data.amount,
                         currency: data.currency,
                         order_id: data.order_id,
                         handler: function (response) {
-                            // Handle successful payment
                             fetch('/payment-success', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
@@ -253,33 +259,44 @@
                                 })
                                 .then(res => {
                                     if (res.status === "success") {
-                                        window.location.href = "/payment-success-page"; // Redirect to success page
+                                        window.location.href = "/payment-success-page";
                                     } else {
                                         throw new Error(res.message || "Payment verification failed.");
                                     }
                                 })
                                 .catch(err => {
                                     alert(err.message);
-                                    window.location.href = "/payment-failed"; // Redirect to failed page
+                                    window.location.href = "/payment-failed";
+                                })
+                                .finally(() => {
+                                    // Reset button state after completion
+                                    buyButton.disabled = false;
+                                    buyButton.textContent = "Buy Now";
                                 });
                         },
                         theme: {
-                            color: "#3399cc" // Customization for Razorpay popup
+                            color: "#3399cc"
                         }
                     };
 
                     const rzp = new Razorpay(options);
                     rzp.on('payment.failed', function (response) {
                         alert("Payment failed: " + response.error.description);
-                        window.location.href = "/payment-failed"; // Redirect to failed page
+                        window.location.href = "/payment-failed";
                     });
                     rzp.open();
                 })
                 .catch(err => {
                     console.error(err);
                     alert(err.message || "An unexpected error occurred. Please try again.");
+                })
+                .finally(() => {
+                    // Reset button state if an error occurs before Razorpay opens
+                    buyButton.disabled = false;
+                    buyButton.textContent = "Buy Now";
                 });
         }
+
     </script>
 
 
