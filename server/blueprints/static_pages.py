@@ -29,3 +29,7 @@ def refund():
 @static_pages_bp.route("/terms")
 def terms():
     return render_template("terms.html")
+
+@static_pages_bp.route("/shipping")
+def shipping():
+    return render_template("shipping.html")
