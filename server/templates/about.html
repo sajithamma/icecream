@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        About Us : AI Vision to explains everything you see
+    </title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo/favicon.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animate.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/swiper-bundle.min.css') }}">
+
+    <style>
+        .bg-primary {
+            background-color: rgb(27, 144, 173) !important;
+
+        }
+
+        .navbar-logo img {
+            width: 70px !important;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .navbar-logo img {
+                width: 45px !important;
+            }
+        }
+    </style>
+
+
+    <!-- ==== WOW JS ==== -->
+    <script src="/static/js/wow.min.js"></script>
+    <script>
+        new WOW().init();
+    </script>
+</head>
+
+<body>
+    <!-- ====== Navbar Section Start -->
+    <div class="ud-header absolute left-0 top-0 z-40 flex w-full items-center bg-transparent">
+        <div class="container">
+            <div class="relative -mx-4 flex items-center justify-between">
+                <div class="w-60 max-w-full px-4">
+                    <a href="/" class="navbar-logo block w-full py-5">
+                        <img src="/static/images/logo/logo.png" alt="logo" class="header-logo w-full" />
+                    </a>
+                </div>
+                <div class="flex w-full items-center justify-between px-4">
+                    <div>
+                        <button id="navbarToggler"
+                            class="absolute right-4 top-1/2 block -translate-y-1/2 rounded-lg px-3 py-[6px] ring-primary focus:ring-2 lg:hidden">
+                            <span class="relative my-[6px] block h-[2px] w-[30px] bg-white"></span>
+                            <span class="relative my-[6px] block h-[2px] w-[30px] bg-white"></span>
+                            <span class="relative my-[6px] block h-[2px] w-[30px] bg-white"></span>
+                        </button>
+                        <nav id="navbarCollapse"
+                            class="absolute right-4 top-full hidden w-full max-w-[250px] rounded-lg bg-white py-5 shadow-lg dark:bg-dark-2 lg:static lg:block lg:w-full lg:max-w-full lg:bg-transparent lg:px-4 lg:py-0 lg:shadow-none dark:lg:bg-transparent xl:px-6">
+                            <ul class="blcok lg:flex 2xl:ml-20">
+                                <li class="group relative">
+                                    <a href="#home"
+                                        class="ud-menu-scroll mx-8 flex py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70">
+                                        Home
+                                    </a>
+                                </li>
+                                <li class="group relative">
+                                    <a href="#features"
+                                        class="ud-menu-scroll mx-8 flex py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10">
+                                        Features
+                                    </a>
+                                </li>
+                                <li class="group relative">
+                                    <a href="#pricing"
+                                        class="ud-menu-scroll mx-8 flex py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10">
+                                        Pricing
+                                    </a>
+                                </li>
+
+                                <li class="group relative">
+                                    <a href="/about"
+                                        class="ud-menu-scroll mx-8 flex py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10">
+                                        About
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="flex items-center justify-end pr-16 lg:pr-0">
+                        <div class="hidden sm:flex">
+                            <a href="https://www.youtube.com"
+                                class="loginBtn px-[22px] py-2 text-base font-medium text-white hover:opacity-70">
+                                Watch Video
+                            </a>
+                            <a href="https://chromewebstore.google.com/detail/icecream/gkngkecaijfnpadgeepjapabhkpikhdl"
+                                class="signUpBtn rounded-md bg-white bg-opacity-20 px-6 py-2 text-base font-medium text-white duration-300 ease-in-out hover:bg-opacity-100 hover:text-dark">
+                                ⚡ Install Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ====== Navbar Section End -->
+
+    <!-- ====== Hero Section Start -->
+    <div id="home" class="relative overflow-hidden bg-primary pt-[120px] md:pt-[130px] lg:pt-[160px]">
+        <div class="container">
+            <div class="-mx-4 flex flex-wrap items-center">
+                <div class="w-full px-4">
+                    <div class="hero-content wow fadeInUp mx-auto max-w-[780px] text-center" data-wow-delay=".2s">
+                        <h1 style="text-shadow: 0px 0px 10px rgb(91 88 88 / 95%);"
+                            class="mb-6 text-3xl font-bold leading-snug text-white sm:text-4xl sm:leading-snug lg:text-5xl lg:leading-[1.2]">
+
+                            <span style="color: #5df2ef;">About </span> IceCream <span
+                                style="color: #FCD785">Vision</span> AI
+                        </h1>
+                        <p style="text-align: justify; font-size: small;"
+                            class=" mx-auto mb-9 max-w-[600px] text-base font-medium text-white sm:text-lg sm:leading-[1.44]">
+
+                            Welcome to IceCream.Vision, a cutting-edge platform that combines advanced AI capabilities
+                            with intuitive user experiences to simplify how you interact with digital content.
+
+                            Our mission is to empower users to learn fast, explain about anything quickly and make the
+                            learning process faster. Whether you're a professional seeking
+                            efficient solutions, a student looking to streamline research, or a business striving to
+                            enhance productivity, IceCream.Vision is here to serve you.
+                        </p>
+
+                        <div style="color: white !important; margin-bottom: 40px; font-size: small;">
+                            <span>Eg: <strong>Answer</strong> all the questions on the
+                                screen.</span>
+                            <br /> <span>Eg: Explain a diagram, or a chart or a complicated equation.
+                            </span>
+
+                            <br /> <span>Eg: Explain the website content to me in
+                                <strong>Hindi</strong></span>
+
+                        </div>
+
+                        <div style="color: white !important; margin-bottom: 40px; font-size: small;">
+                            A T-Shaped Initiative
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <div class="w-full px-4">
+                    <div class="wow fadeInUp relative z-10 mx-auto max-w-[845px]" data-wow-delay=".25s">
+                        <div class="mt-16">
+                            <img src="/static/images/logo/tshaped.jpg" alt="hero"
+                                class="mx-auto max-w-full rounded-t-xl rounded-tr-xl" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ====== CTA Section Start -->
+    <section class="relative z-10 overflow-hidden bg-primary py-20 lg:py-[115px]" id="pricing">
+        <div class="container mx-auto">
+            <div class="relative overflow-hidden">
+                <div class="-mx-4 flex flex-wrap items-stretch">
+                    <div class="w-full px-4">
+                        <div class="mx-auto max-w-[570px] text-center">
+
+                            <a href="/s"
+                                class="inline-block rounded-md border border-transparent bg-secondary px-7 py-3 text-base font-medium text-white transition hover:bg-[#0BB489]">
+                                Back to Home
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <!-- ====== CTA Section End -->
+
+    <!-- ====== Footer Section Start -->
+    <footer class="wow fadeInUp relative z-10 bg-[#090E34] pt-20 lg:pt-[100px]" data-wow-delay=".15s">
+
+        <div class="mt-12 border-t border-[#8890A4] border-opacity-40 py-8 lg:mt-[60px]">
+            <div class="container">
+                <div class="-mx-4 flex flex-wrap">
+                    <div class="w-full px-4 md:w-2/3 lg:w-1/2">
+                        <div class="my-1">
+                            <div class="-mx-3 flex items-center justify-center md:justify-start">
+                                <a href="https://rhinestone-naranja-bf4.notion.site/Privacy-Policy-14816a185b9e80b58318ecc3f3b267dc"
+                                    class="px-3 text-base text-gray-7 hover:text-white hover:underline">
+                                    Privacy policy
+                                </a>
+                                <a href="https://rhinestone-naranja-bf4.notion.site/Refund-Policy-14816a185b9e80a99da4c0ccf83d2ad2"
+                                    class="px-3 text-base text-gray-7 hover:text-white hover:underline">
+                                    Refund Policy
+                                </a>
+                                <a href="https://rhinestone-naranja-bf4.notion.site/Terms-Condition-14816a185b9e80f2a04de857c8bdff82"
+                                    class="px-3 text-base text-gray-7 hover:text-white hover:underline">
+                                    Terms of service
+                                </a>
+                                <a href="/contact" class="px-3 text-base text-gray-7 hover:text-white hover:underline">
+                                    Contact
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full px-4 md:w-1/3 lg:w-1/2">
+                        <div class="my-1 flex justify-center md:justify-end">
+                            <p class="text-base text-gray-7">
+                                Copyright &copy; 2024/25, All Rights Reserved.
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </footer>
+
+</body>
+
+</html>
