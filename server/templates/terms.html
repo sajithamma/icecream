@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        Terms : AI Vision to explains everything you see
+    </title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo/favicon.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animate.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/swiper-bundle.min.css') }}">
+
+    <style>
+        .bg-primary {
+            background-color: rgb(27, 144, 173) !important;
+
+        }
+
+        .navbar-logo img {
+            width: 70px !important;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .navbar-logo img {
+                width: 45px !important;
+            }
+        }
+    </style>
+
+
+    <!-- ==== WOW JS ==== -->
+    <script src="/static/js/wow.min.js"></script>
+    <script>
+        new WOW().init();
+    </script>
+</head>
+
+<body>
+    <!-- ====== Navbar Section Start -->
+    <div class="ud-header absolute left-0 top-0 z-40 flex w-full items-center bg-transparent">
+        <div class="container">
+            <div class="relative -mx-4 flex items-center justify-between">
+                <div class="w-60 max-w-full px-4">
+                    <a href="/" class="navbar-logo block w-full py-5">
+                        <img src="/static/images/logo/logo.png" alt="logo" class="header-logo w-full" />
+                    </a>
+                </div>
+                <div class="flex w-full items-center justify-between px-4">
+                    <div>
+                        <button id="navbarToggler"
+                            class="absolute right-4 top-1/2 block -translate-y-1/2 rounded-lg px-3 py-[6px] ring-primary focus:ring-2 lg:hidden">
+                            <span class="relative my-[6px] block h-[2px] w-[30px] bg-white"></span>
+                            <span class="relative my-[6px] block h-[2px] w-[30px] bg-white"></span>
+                            <span class="relative my-[6px] block h-[2px] w-[30px] bg-white"></span>
+                        </button>
+                        <nav id="navbarCollapse"
+                            class="absolute right-4 top-full hidden w-full max-w-[250px] rounded-lg bg-white py-5 shadow-lg dark:bg-dark-2 lg:static lg:block lg:w-full lg:max-w-full lg:bg-transparent lg:px-4 lg:py-0 lg:shadow-none dark:lg:bg-transparent xl:px-6">
+                            <ul class="blcok lg:flex 2xl:ml-20">
+                                <li class="group relative">
+                                    <a href="/"
+                                        class="ud-menu-scroll mx-8 flex py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70">
+                                        Home
+                                    </a>
+                                </li>
+                                <li class="group relative">
+                                    <a href="/#features"
+                                        class="ud-menu-scroll mx-8 flex py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10">
+                                        Features
+                                    </a>
+                                </li>
+                                <li class="group relative">
+                                    <a href="/#pricing"
+                                        class="ud-menu-scroll mx-8 flex py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10">
+                                        Pricing
+                                    </a>
+                                </li>
+
+                                <li class="group relative">
+                                    <a href="/about"
+                                        class="ud-menu-scroll mx-8 flex py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10">
+                                        About
+                                    </a>
+                                </li>
+
+                                <li class="group relative">
+                                    <a href="/about"
+                                        class="ud-menu-scroll mx-8 flex py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10">
+                                        About
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="flex items-center justify-end pr-16 lg:pr-0">
+                        <div class="hidden sm:flex">
+                            <a href="https://www.youtube.com"
+                                class="loginBtn px-[22px] py-2 text-base font-medium text-white hover:opacity-70">
+                                Watch Video
+                            </a>
+                            <a href="https://chromewebstore.google.com/detail/icecream/gkngkecaijfnpadgeepjapabhkpikhdl"
+                                class="signUpBtn rounded-md bg-white bg-opacity-20 px-6 py-2 text-base font-medium text-white duration-300 ease-in-out hover:bg-opacity-100 hover:text-dark">
+                                ⚡ Install Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ====== Navbar Section End -->
+
+    <!-- ====== Hero Section Start -->
+    <div id="home" class="relative overflow-hidden bg-primary pt-[120px] md:pt-[130px] lg:pt-[160px]">
+        <div class="container">
+            <div class="-mx-4 flex flex-wrap items-center">
+                <div class="w-full px-4">
+                    <div class="hero-content wow fadeInUp mx-auto max-w-[780px] text-center" data-wow-delay=".2s">
+                        <h1 style="text-shadow: 0px 0px 10px rgb(91 88 88 / 95%);"
+                            class="mb-6 text-3xl font-bold leading-snug text-white sm:text-4xl sm:leading-snug lg:text-5xl lg:leading-[1.2]">
+
+                            <span style="color: #5df2ef;">Terms &amp; Conditions </span>
+                        </h1>
+
+                        <style>
+                            .refundpolicy {
+                                color: white;
+                                text-align: justify;
+
+                            }
+
+                            .refundpolicy hr,
+                            .refundpolicy ul {
+                                margin-top: 20px;
+                                margin-bottom: 20px;
+                            }
+
+                            .refundpolicy li {
+                                list-style: circle;
+                                margin-left: 16px;
+                                margin-bottom: 10px;
+                            }
+
+                            .refundpolicy h3 {
+
+                                margin-top: 20px;
+                                margin-bottom: 20px;
+                                color: #FCD785;
+                            }
+                        </style>
+
+
+                        <div class="refundpolicy">
+                            <h3 id="-terms-and-conditions-"><strong>Terms and Conditions</strong></h3>
+                            <h3 id="-effective-date-24-nov-2024-"><strong>Effective Date:</strong> [24-Nov-2024]</h3>
+                            <p>Welcome to ICE Cream by T-Shaped People (&quot;we,&quot; &quot;our,&quot; or
+                                &quot;us&quot;). By accessing or using our tool (&quot;Service&quot;), you agree to
+                                these Terms and Conditions. Please read them carefully. If you do not agree, you may not
+                                use the Service.</p>
+                            <hr>
+                            <h3 id="-1-overview-of-the-service-"><strong>1. Overview of the Service</strong></h3>
+                            <p>Our tool allows users to capture screenshots of their current browser tabs, submit them
+                                to third-party AI services (e.g., OpenAI, Gemini), and receive explanations, summaries,
+                                or related content. By using our tool, you agree to comply with these terms.</p>
+                            <hr>
+                            <h3 id="-2-user-responsibility-"><strong>2. User Responsibility</strong></h3>
+                            <ul>
+                                <li>You are solely responsible for the content you submit via the Service.</li>
+                                <li>You must not upload or share content that is:<ul>
+                                        <li>Illegal or unlawful.</li>
+                                        <li>Obscene, harmful, or sexually explicit.</li>
+                                        <li>Promoting violence, hate speech, or other harmful activities.</li>
+                                    </ul>
+                                </li>
+                                <li>Any misuse of the Service is strictly prohibited, and violations may result in
+                                    suspension or termination of your account.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-3-screenshot-storage-and-use-"><strong>3. Screenshot Storage and Use</strong></h3>
+                            <ul>
+                                <li><strong>Data Storage:</strong> Screenshots submitted through our Service may be
+                                    stored securely for:<ul>
+                                        <li>Auditing purposes.</li>
+                                        <li>Improving and training our systems for future development.</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Retention Period:</strong> Screenshots will be retained for a period of [12
+                                    months] unless otherwise required by law or policy.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-4-sharing-with-third-party-services-"><strong>4. Sharing with Third-Party
+                                    Services</strong></h3>
+                            <ul>
+                                <li>Submitted screenshots will be shared with third-party AI services such as OpenAI,
+                                    Gemini, or other image processing models to generate responses.</li>
+                                <li>By using this tool, you consent to the transmission of your data to these
+                                    third-party services.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-5-liability-disclaimer-"><strong>5. Liability Disclaimer</strong></h3>
+                            <ul>
+                                <li>The tool and company are not responsible for the content of the screenshots or their
+                                    use by users.</li>
+                                <li>Users are fully responsible for ensuring their content complies with local and
+                                    international laws.</li>
+                                <li>Any misuse of the Service for illegal or unethical purposes is solely the user&#39;s
+                                    liability.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-6-right-to-block-users-"><strong>6. Right to Block Users</strong></h3>
+                            <ul>
+                                <li>We reserve the right to suspend or terminate accounts:<ul>
+                                        <li>Based on reports from the community or other third-party services.</li>
+                                        <li>For any violation of these Terms or misuse of the Service.</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <hr>
+                            <h3 id="-7-accuracy-of-information-"><strong>7. Accuracy of Information</strong></h3>
+                            <ul>
+                                <li>The results provided by the tool are generated by third-party AI services.</li>
+                                <li>We make no guarantees regarding the accuracy, relevance, or validity of the
+                                    information.</li>
+                                <li>The tool acts solely as a facilitator and does not verify or endorse the output.
+                                </li>
+                            </ul>
+                            <hr>
+                            <h3 id="-8-compliance-with-third-party-policies-"><strong>8. Compliance with Third-Party
+                                    Policies</strong></h3>
+                            <ul>
+                                <li>Users must comply with the content policies and restrictions of third-party AI
+                                    services (e.g., OpenAI, Gemini) used by this tool.</li>
+                                <li>Violations of these policies may result in suspension or termination of the
+                                    user&#39;s account.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-9-illegal-use-"><strong>9. Illegal Use</strong></h3>
+                            <ul>
+                                <li>The Service is intended for lawful purposes only.</li>
+                                <li>Any use of the tool to bypass laws, commit fraud, or engage in unethical activities
+                                    (e.g., passing tests unlawfully) is prohibited.</li>
+                                <li>The company is not liable for such misuse.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-10-data-security-and-privacy-"><strong>10. Data Security and Privacy</strong></h3>
+                            <ul>
+                                <li>We employ reasonable measures to protect your data.</li>
+                                <li>However, we cannot guarantee absolute security, and you acknowledge the inherent
+                                    risks of using online tools.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-11-ownership-of-content-"><strong>11. Ownership of Content</strong></h3>
+                            <ul>
+                                <li>Users retain ownership of their submitted content but grant us a limited license to
+                                    store, process, and use it as outlined in this policy.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-12-service-continuity-"><strong>12. Service Continuity</strong></h3>
+                            <ul>
+                                <li>We make no guarantees regarding uninterrupted access to the Service. It may be
+                                    unavailable due to maintenance, updates, or unforeseen issues.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-13-feedback-and-reporting-"><strong>13. Feedback and Reporting</strong></h3>
+                            <ul>
+                                <li>Users are encouraged to report misuse or provide feedback to help us improve the
+                                    Service.</li>
+                                <li>Feedback submitted by users may be used by the company without compensation or
+                                    acknowledgment.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-14-age-restriction-"><strong>14. Age Restriction</strong></h3>
+                            <ul>
+                                <li>The Service is intended for users aged 18 and older. By using the Service, you
+                                    confirm that you meet this age requirement.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-15-intellectual-property-"><strong>15. Intellectual Property</strong></h3>
+                            <ul>
+                                <li>All rights to the tool, including code, design, and branding, remain with ICECream
+                                </li>
+                                <li>Users are prohibited from reverse-engineering, copying, or replicating the Service.
+                                </li>
+                            </ul>
+                            <hr>
+                            <h3 id="-16-prohibited-activities-"><strong>16. Prohibited Activities</strong></h3>
+                            <p>Users must not:</p>
+                            <ul>
+                                <li>Upload copyrighted or proprietary content without permission.</li>
+                                <li>Attempt to hack, alter, or misuse the Service.</li>
+                                <li>Use the Service for competitive analysis or derivative works.</li>
+                            </ul>
+                            <hr>
+                            <hr>
+                            <h3 id="-17-limitation-of-liability-"><strong>17. Limitation of Liability</strong></h3>
+                            <ul>
+                                <li>Our liability is capped at the subscription fee paid for the most recent billing
+                                    period.</li>
+                                <li>We are not responsible for any indirect, incidental, or consequential damages.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-18-governing-law-and-jurisdiction-"><strong>18. Governing Law and
+                                    Jurisdiction</strong></h3>
+                            <ul>
+                                <li>These Terms shall be governed by the laws of [Your Country/State].</li>
+                                <li>Any disputes will be resolved exclusively in the courts of [Your Jurisdiction].</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-19-updates-to-terms-"><strong>19 . Updates to Terms</strong></h3>
+                            <ul>
+                                <li>We reserve the right to update these Terms at any time.</li>
+                                <li>Users will be notified of changes via email or announcements on our website.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-20-contact-information-"><strong>20. Contact Information</strong></h3>
+                            <p>For questions or concerns about these Terms, please contact us at:</p>
+                            <ul>
+                                <li><strong>Email:</strong> info@tshaped.in</li>
+                                <li><strong>Mailing Address:</strong></li>
+                            </ul>
+                            <p>T-Shaped People (P) Limited</p>
+                            <p>Room number 60/49 E,</p>
+                            <p>JC CHAMBERS,</p>
+                            <p>Panampally Nagar,</p>
+                            <p>Ernakulam,</p>
+                            <p>India, 682036.</p>
+
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="w-full px-4">
+                    <div class="wow fadeInUp relative z-10 mx-auto max-w-[845px]" data-wow-delay=".25s">
+                        <div class="mt-16">
+                            <img src="/static/images/logo/tshaped.jpg" alt="hero"
+                                class="mx-auto max-w-full rounded-t-xl rounded-tr-xl" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ====== CTA Section Start -->
+    <section class="relative z-10 overflow-hidden bg-primary py-20 lg:py-[115px]" id="pricing">
+        <div class="container mx-auto">
+            <div class="relative overflow-hidden">
+                <div class="-mx-4 flex flex-wrap items-stretch">
+                    <div class="w-full px-4">
+                        <div class="mx-auto max-w-[570px] text-center">
+
+                            <a href="/s"
+                                class="inline-block rounded-md border border-transparent bg-secondary px-7 py-3 text-base font-medium text-white transition hover:bg-[#0BB489]">
+                                Back to Home
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <!-- ====== CTA Section End -->
+
+    <!-- ====== Footer Section Start -->
+    <footer class="wow fadeInUp relative z-10 bg-[#090E34] pt-20 lg:pt-[100px]" data-wow-delay=".15s">
+
+        <div class="mt-12 border-t border-[#8890A4] border-opacity-40 py-8 lg:mt-[60px]">
+            <div class="container">
+                <div class="-mx-4 flex flex-wrap">
+                    <div class="w-full px-4 md:w-2/3 lg:w-1/2">
+                        <div class="my-1">
+                            <div class="-mx-3 flex items-center justify-center md:justify-start">
+                                <a href="https://rhinestone-naranja-bf4.notion.site/Privacy-Policy-14816a185b9e80b58318ecc3f3b267dc"
+                                    class="px-3 text-base text-gray-7 hover:text-white hover:underline">
+                                    Privacy policy
+                                </a>
+                                <a href="https://rhinestone-naranja-bf4.notion.site/Refund-Policy-14816a185b9e80a99da4c0ccf83d2ad2"
+                                    class="px-3 text-base text-gray-7 hover:text-white hover:underline">
+                                    Refund Policy
+                                </a>
+                                <a href="https://rhinestone-naranja-bf4.notion.site/Terms-Condition-14816a185b9e80f2a04de857c8bdff82"
+                                    class="px-3 text-base text-gray-7 hover:text-white hover:underline">
+                                    Terms of service
+                                </a>
+                                <a href="/contact" class="px-3 text-base text-gray-7 hover:text-white hover:underline">
+                                    Contact
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full px-4 md:w-1/3 lg:w-1/2">
+                        <div class="my-1 flex justify-center md:justify-end">
+                            <p class="text-base text-gray-7">
+                                Copyright &copy; 2024/25, All Rights Reserved.
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </footer>
+
+</body>
+
+</html>
