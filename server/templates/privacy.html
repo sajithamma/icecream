@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        Privacy Policy : AI Vision to explains everything you see
+    </title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo/favicon.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animate.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/swiper-bundle.min.css') }}">
+
+    <style>
+        .bg-primary {
+            background-color: rgb(27, 144, 173) !important;
+
+        }
+
+        .navbar-logo img {
+            width: 70px !important;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .navbar-logo img {
+                width: 45px !important;
+            }
+        }
+    </style>
+
+
+    <!-- ==== WOW JS ==== -->
+    <script src="/static/js/wow.min.js"></script>
+    <script>
+        new WOW().init();
+    </script>
+</head>
+
+<body>
+    <!-- ====== Navbar Section Start -->
+    <div class="ud-header absolute left-0 top-0 z-40 flex w-full items-center bg-transparent">
+        <div class="container">
+            <div class="relative -mx-4 flex items-center justify-between">
+                <div class="w-60 max-w-full px-4">
+                    <a href="/" class="navbar-logo block w-full py-5">
+                        <img src="/static/images/logo/logo.png" alt="logo" class="header-logo w-full" />
+                    </a>
+                </div>
+                <div class="flex w-full items-center justify-between px-4">
+                    <div>
+                        <button id="navbarToggler"
+                            class="absolute right-4 top-1/2 block -translate-y-1/2 rounded-lg px-3 py-[6px] ring-primary focus:ring-2 lg:hidden">
+                            <span class="relative my-[6px] block h-[2px] w-[30px] bg-white"></span>
+                            <span class="relative my-[6px] block h-[2px] w-[30px] bg-white"></span>
+                            <span class="relative my-[6px] block h-[2px] w-[30px] bg-white"></span>
+                        </button>
+                        <nav id="navbarCollapse"
+                            class="absolute right-4 top-full hidden w-full max-w-[250px] rounded-lg bg-white py-5 shadow-lg dark:bg-dark-2 lg:static lg:block lg:w-full lg:max-w-full lg:bg-transparent lg:px-4 lg:py-0 lg:shadow-none dark:lg:bg-transparent xl:px-6">
+                            <ul class="blcok lg:flex 2xl:ml-20">
+                                <li class="group relative">
+                                    <a href="/"
+                                        class="ud-menu-scroll mx-8 flex py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70">
+                                        Home
+                                    </a>
+                                </li>
+                                <li class="group relative">
+                                    <a href="/#features"
+                                        class="ud-menu-scroll mx-8 flex py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10">
+                                        Features
+                                    </a>
+                                </li>
+                                <li class="group relative">
+                                    <a href="/#pricing"
+                                        class="ud-menu-scroll mx-8 flex py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10">
+                                        Pricing
+                                    </a>
+                                </li>
+
+                                <li class="group relative">
+                                    <a href="/about"
+                                        class="ud-menu-scroll mx-8 flex py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10">
+                                        About
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="flex items-center justify-end pr-16 lg:pr-0">
+                        <div class="hidden sm:flex">
+                            <a href="https://www.youtube.com"
+                                class="loginBtn px-[22px] py-2 text-base font-medium text-white hover:opacity-70">
+                                Watch Video
+                            </a>
+                            <a href="https://chromewebstore.google.com/detail/icecream/gkngkecaijfnpadgeepjapabhkpikhdl"
+                                class="signUpBtn rounded-md bg-white bg-opacity-20 px-6 py-2 text-base font-medium text-white duration-300 ease-in-out hover:bg-opacity-100 hover:text-dark">
+                                ⚡ Install Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ====== Navbar Section End -->
+
+    <!-- ====== Hero Section Start -->
+    <div id="home" class="relative overflow-hidden bg-primary pt-[120px] md:pt-[130px] lg:pt-[160px]">
+        <div class="container">
+            <div class="-mx-4 flex flex-wrap items-center">
+                <div class="w-full px-4">
+                    <div class="hero-content wow fadeInUp mx-auto max-w-[780px] text-center" data-wow-delay=".2s">
+                        <h1 style="text-shadow: 0px 0px 10px rgb(91 88 88 / 95%);"
+                            class="mb-6 text-3xl font-bold leading-snug text-white sm:text-4xl sm:leading-snug lg:text-5xl lg:leading-[1.2]">
+
+                            <span style="color: #5df2ef;">Privacy Policy </span>
+                        </h1>
+
+                        <style>
+                            .refundpolicy {
+                                color: white;
+                                text-align: justify;
+
+                            }
+
+                            .refundpolicy hr,
+                            .refundpolicy ul {
+                                margin-top: 20px;
+                                margin-bottom: 20px;
+                            }
+
+                            .refundpolicy li {
+                                list-style: circle;
+                                margin-left: 16px;
+                                margin-bottom: 10px;
+                            }
+
+                            .refundpolicy h3 {
+
+                                margin-top: 20px;
+                                margin-bottom: 20px;
+                                color: #FCD785;
+                            }
+                        </style>
+
+
+                        <div class="refundpolicy">
+                            <h3 id="-privacy-policy-"><strong>Privacy Policy</strong></h3>
+                            <p><strong>Effective Date:</strong> <strong>24-Nov-2024</strong></p>
+                            <p>ICECream Vision (“we,” “our,” or “us”) respects your privacy and is committed to
+                                protecting your personal data. This Privacy Policy explains how we collect, use, store,
+                                and share your information when you use our browser plugin and related services (the
+                                “Service”).</p>
+                            <hr>
+                            <h3 id="-1-information-we-collect-"><strong>1. Information We Collect</strong></h3>
+                            <h3 id="-1-1-user-information-"><strong>1.1 User Information</strong></h3>
+                            <ul>
+                                <li>When you sign in using Google OAuth, we collect your email address.</li>
+                                <li>This email is used for account creation, authentication, and service-related
+                                    communication.</li>
+                            </ul>
+                            <h3 id="-1-2-user-generated-data-"><strong>1.2 User-Generated Data</strong></h3>
+                            <ul>
+                                <li><strong>Screenshots:</strong> We store the screenshots you submit for processing
+                                    through our Service.</li>
+                                <li><strong>Questions:</strong> We store the questions or prompts you submit along with
+                                    the screenshots.</li>
+                                <li>All screenshots and questions are stored securely for <strong>12 months</strong> to
+                                    allow auditing, service improvements, and training purposes.</li>
+                            </ul>
+                            <h3 id="-1-3-payment-information-"><strong>1.3 Payment Information</strong></h3>
+                            <ul>
+                                <li>We do <strong>not</strong> collect or store any payment-related information, such as
+                                    credit card or bank details.</li>
+                                <li>Payments are processed securely through trusted third-party payment gateways.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-2-how-we-use-your-information-"><strong>2. How We Use Your Information</strong>
+                            </h3>
+                            <p>We use the information we collect for the following purposes:</p>
+                            <ul>
+                                <li><strong>To Provide the Service:</strong> Process screenshots and questions submitted
+                                    to third-party AI services and return results.</li>
+                                <li><strong>To Maintain the Service:</strong> Audit and analyze stored data to improve
+                                    and enhance the functionality of our Service.</li>
+                                <li><strong>To Communicate:</strong> Notify you of updates, respond to support requests,
+                                    or send service-related communications.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-3-data-handling-by-the-plugin-"><strong>3. Data Handling by the Plugin</strong>
+                            </h3>
+                            <h3 id="-3-1-limited-browser-access-"><strong>3.1 Limited Browser Access</strong></h3>
+                            <ul>
+                                <li>The browser plugin does not read, store, or access any data from your browser
+                                    unless:<ul>
+                                        <li><strong>You trigger an action:</strong> By clicking the plugin icon and
+                                            initiating a request.</li>
+                                        <li><strong>Accessing the current active tab:</strong> The plugin only accesses
+                                            the content of the currently active browser tab where the user operates the
+                                            plugin.</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <h3 id="-3-2-no-history-or-browsing-data-"><strong>3.2 No History or Browsing Data</strong>
+                            </h3>
+                            <ul>
+                                <li>The plugin does <strong>not</strong> access or store your browsing history or other
+                                    unrelated data from your browser.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-4-sharing-your-information-"><strong>4. Sharing Your Information</strong></h3>
+                            <h3 id="-4-1-third-party-ai-services-"><strong>4.1 Third-Party AI Services</strong></h3>
+                            <ul>
+                                <li>To process your requests, screenshots and questions are shared with third-party AI
+                                    services such as OpenAI or Gemini.</li>
+                                <li>These services analyze the content and return results, and their respective privacy
+                                    policies apply to this data.</li>
+                            </ul>
+                            <h3 id="-4-2-trusted-payment-gateways-"><strong>4.2 Trusted Payment Gateways</strong></h3>
+                            <ul>
+                                <li>Payment details are handled by trusted payment gateways (e.g., Stripe, PayPal) and
+                                    are never stored or processed by us.</li>
+                            </ul>
+                            <h3 id="-4-3-legal-compliance-"><strong>4.3 Legal Compliance</strong></h3>
+                            <ul>
+                                <li>We may share information if required to comply with applicable laws, regulations,
+                                    legal processes, or enforceable government requests.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-5-data-storage-and-retention-"><strong>5. Data Storage and Retention</strong></h3>
+                            <ul>
+                                <li><strong>Retention Period:</strong> User data, including email addresses,
+                                    screenshots, and submitted questions, is stored for <strong>12 months</strong> and
+                                    securely deleted thereafter.</li>
+                                <li><strong>Storage Security:</strong> We use industry-standard encryption and security
+                                    measures to protect stored data from unauthorized access.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-6-user-choices-and-control-"><strong>6. User Choices and Control</strong></h3>
+                            <ul>
+                                <li><strong>Access and Deletion:</strong> You can request access to your stored data or
+                                    ask us to delete it by contacting [Insert Contact Information].</li>
+                                <li><strong>Consent Withdrawal:</strong> You may revoke access to your data or uninstall
+                                    the plugin at any time.</li>
+                                <li><strong>Data Sharing:</strong> By using the Service, you consent to sharing your
+                                    data with third-party AI services as described.</li>
+                            </ul>
+                            <hr>
+                            <h3 id="-7-data-security-"><strong>7. Data Security</strong></h3>
+                            <p>We implement appropriate technical and organizational measures to protect your data from
+                                unauthorized access, alteration, disclosure, or destruction. However, no method of
+                                transmission or storage is 100% secure, and we cannot guarantee absolute security.</p>
+                            <hr>
+                            <h3 id="-8-children-s-privacy-"><strong>8. Children’s Privacy</strong></h3>
+                            <p>Our Service is not intended for individuals under the age of 18. We do not knowingly
+                                collect personal data from children. If you believe a child has provided us with
+                                personal data, please contact us, and we will take steps to delete it.</p>
+                            <hr>
+                            <h3 id="-9-updates-to-this-privacy-policy-"><strong>9. Updates to This Privacy
+                                    Policy</strong></h3>
+                            <p>We reserve the right to update this Privacy Policy at any time. Changes will be posted on
+                                this page with an updated effective date. Continued use of the Service after changes are
+                                posted constitutes your acceptance of the revised policy.</p>
+                            <hr>
+                            <h3 id="-10-contact-us-"><strong>10. Contact Us</strong></h3>
+                            <p>If you have questions about this Privacy Policy or wish to exercise your privacy rights,
+                                you can contact us at:</p>
+                            <ul>
+                                <li><strong>Email:</strong> info@tshaped.in</li>
+                                <li><strong>Mailing Address:</strong></li>
+                            </ul>
+                            <p>T-Shaped People (P) Limited</p>
+                            <p>Room number 60/49 E,</p>
+                            <p>JC CHAMBERS,</p>
+                            <p>Panampally Nagar,</p>
+                            <p>Ernakulam,</p>
+                            <p>India, 682036.</p>
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="w-full px-4">
+                    <div class="wow fadeInUp relative z-10 mx-auto max-w-[845px]" data-wow-delay=".25s">
+                        <div class="mt-16">
+                            <img src="/static/images/logo/tshaped.jpg" alt="hero"
+                                class="mx-auto max-w-full rounded-t-xl rounded-tr-xl" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ====== CTA Section Start -->
+    <section class="relative z-10 overflow-hidden bg-primary py-20 lg:py-[115px]" id="pricing">
+        <div class="container mx-auto">
+            <div class="relative overflow-hidden">
+                <div class="-mx-4 flex flex-wrap items-stretch">
+                    <div class="w-full px-4">
+                        <div class="mx-auto max-w-[570px] text-center">
+
+                            <a href="/s"
+                                class="inline-block rounded-md border border-transparent bg-secondary px-7 py-3 text-base font-medium text-white transition hover:bg-[#0BB489]">
+                                Back to Home
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <!-- ====== CTA Section End -->
+
+    <!-- ====== Footer Section Start -->
+    <footer class="wow fadeInUp relative z-10 bg-[#090E34] pt-20 lg:pt-[100px]" data-wow-delay=".15s">
+
+        <div class="mt-12 border-t border-[#8890A4] border-opacity-40 py-8 lg:mt-[60px]">
+            <div class="container">
+                <div class="-mx-4 flex flex-wrap">
+                    <div class="w-full px-4 md:w-2/3 lg:w-1/2">
+                        <div class="my-1">
+                            <div class="-mx-3 flex items-center justify-center md:justify-start">
+                                <a href="https://rhinestone-naranja-bf4.notion.site/Privacy-Policy-14816a185b9e80b58318ecc3f3b267dc"
+                                    class="px-3 text-base text-gray-7 hover:text-white hover:underline">
+                                    Privacy policy
+                                </a>
+                                <a href="https://rhinestone-naranja-bf4.notion.site/Refund-Policy-14816a185b9e80a99da4c0ccf83d2ad2"
+                                    class="px-3 text-base text-gray-7 hover:text-white hover:underline">
+                                    Refund Policy
+                                </a>
+                                <a href="https://rhinestone-naranja-bf4.notion.site/Terms-Condition-14816a185b9e80f2a04de857c8bdff82"
+                                    class="px-3 text-base text-gray-7 hover:text-white hover:underline">
+                                    Terms of service
+                                </a>
+                                <a href="/contact" class="px-3 text-base text-gray-7 hover:text-white hover:underline">
+                                    Contact
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full px-4 md:w-1/3 lg:w-1/2">
+                        <div class="my-1 flex justify-center md:justify-end">
+                            <p class="text-base text-gray-7">
+                                Copyright &copy; 2024/25, All Rights Reserved.
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </footer>
+
+</body>
+
+</html>
