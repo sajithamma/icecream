@@ -17,3 +17,15 @@ def about():
 @static_pages_bp.route("/contact")
 def contact():
     return render_template("contact.html")
+
+@static_pages_bp.route("/privacy")
+def privacy():
+    return render_template("privacy.html")
+
+@static_pages_bp.route("/refund")
+def refund():
+    return render_template("refund.html")
+
+@static_pages_bp.route("/terms")
+def terms():
+    return render_template("terms.html")
