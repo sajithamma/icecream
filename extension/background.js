@@ -133,7 +133,6 @@ function runIceCream(tab) {
             displayNotification(tab.id, "Capturing data and analysing...", true);
             captureFullViewport(tab.id, question);
         } else if (captureMode === "selection") {
-            displayNotification(tab.id, "Capturing data and analysing...", true);
             console.log("Starting selection overlay for area capture...");
             captureSelectedArea(tab.id, question);
         } else if (captureMode === "fullPage") {  // New mode for full-page capture
