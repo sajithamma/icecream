@@ -1,22 +1,56 @@
-# ICE CREAM
+# 🍦 ICECREAM
 
-Introducing ICE Cream, your ultimate Chrome plugin powered by AI Vision, ready to answer anything about the webpage you're visiting.
+**Introducing Icecream**, your ultimate Chrome plugin powered by AI Vision, ready to assist with anything on the webpage you're visiting.
 
-Need answers to a question paper? Just click the icon, and your answers will appear at the bottom right of your screen. Whether it's multiple-choice questions or written answers, ICE Cream has you covered.
+---
 
-Want to understand something in a language you’re comfortable with? Set your preferred prompt, and ICE Cream will translate and explain website content in your language.
+## 🌟 Features
 
-Looking to craft the perfect message for a LinkedIn profile you’re viewing? ICE Cream reads the profile, understands the person, and drafts a tailored message based on your instructions.
+###  **Get Instant Answers**
+- Have a question paper or quiz?  
+  Simply click the ICE Cream icon, and your answers will appear at the **bottom-right of your screen**—whether it's **multiple-choice questions** or **written answers**, ICE Cream has you covered.
 
-Curious about an image or artwork? ICE Cream will explain it to you with just one click.
+###  **Translate and Simplify Content**
+- Not comfortable with the webpage language?  
+  Set your preferred language or prompt, and ICE Cream will **translate** and **explain** the content in a way you understand.
 
-Need help simplifying a research paper to your level of understanding? ICE Cream makes complex information accessible.
+###  **Craft Tailored Messages**
+- Need the perfect message for a LinkedIn profile you're viewing?  
+  ICE Cream reads the profile, **understands the person**, and drafts a **personalized message** based on your instructions.
 
-Simply set your prompt—whatever instructions you have for the current webpage—and ICE Cream will do the rest.
+###  **Understand Images and Artwork**
+- Curious about an image or artwork?  
+  With one click, ICE Cream will **explain it to you** in detail.
 
-Visit icecream.vision, add the plugin to your Chrome browser, and experience its features with just one click.
+###  **Simplify Research Papers**
+- Struggling with complex academic papers?  
+  ICE Cream simplifies technical content into **clear, understandable information** tailored to your level.
 
-The power of AI, seamlessly integrated into your browser—no tab switching, no window juggling. Everything happens on the fly.
+---
+
+##  **How It Works**
+1. **Set your custom prompt**—provide instructions or specify your needs for the current webpage.
+2. **Click the ICE Cream icon**, and let AI Vision handle the rest.
+3. View results seamlessly **within the same tab**, without tab-switching or distractions.
+
+---
+
+## **Get Started**
+1. **Visit:** [icecream.vision](https://icecream.vision)
+2. **Install the plugin** on your Chrome browser.
+3. Start exploring its features with just one click!
+
+---
+
+## **Why ICE Cream?**
+- **AI-powered assistance** for effortless web browsing.
+- **On-the-fly results** without switching tabs or juggling windows.
+- Tailored experiences for **every user need**, from answering questions to crafting messages.
+
+---
+
+**The power of AI, seamlessly integrated into your browser. Experience the difference with ICE Cream! 🍦**
+
 
 ## Edit server/.env file to set the following variables
 ```bash
